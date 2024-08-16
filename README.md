@@ -1,5 +1,15 @@
 # Dumpling-Recipe-App
- 
+
+Method for Pantry function:
+
+
+
+
+
+
+
+
+
 Method for Recipes function:
 1. getRecipes() ; 
     inoput: string (foodname)  
@@ -14,3 +24,6 @@ Method for Recipes function:
 5. getRecipesFoods();
     input: List<Recipe> (new recipes list after matching)
     output: List<Food> (a set of foods from all the recipes int the list)
+
+
+Method for Grocery List function:
