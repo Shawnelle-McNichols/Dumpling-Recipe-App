@@ -1,6 +1,6 @@
 # Dumpling-Recipe-App
 
-Method for Pantry function ( Shawnelle):
+Method for Pantry function ( Shawnelle ):
 
 
 
@@ -10,7 +10,7 @@ Method for Pantry function ( Shawnelle):
 
 
 
-Method for Recipes function ( Shuting):
+Method for Recipes function ( Shuting ):
 1. getRecipes() ; 
     inoput: string (foodname)  
     output: List<Recipe> ( recipes which contain this food)
