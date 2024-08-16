@@ -27,3 +27,24 @@ Method for Recipes function ( Shuting ):
 
 
 Method for Grocery List function ( Yingying ):
+1.generateGroceryList(recipeFoods: string[], pantryFoods: string[]): string[]
+    Input:
+        recipeFoods: string[] (list of foods required by the recipes)
+        pantryFoods: string[] (list of foods already in the pantry)
+    Output: string[] (list of foods that need to be bought)
+2. viewGroceryList(groceryList: string[]): string[]
+    Input: groceryList: string[]
+    Output: string[] (return the current grocery list)
+3. updateGroceryList(groceryList: string[], item: string): string[]
+    Input:
+        groceryList: string[] (current grocery list)
+        item: string (item to add or update in the list)
+    Output: string[] (updated grocery list)
+4. deleteItemFromGroceryList(groceryList: string[], item: string): string[]
+    Input:
+        groceryList: string[] (current grocery list)
+        item: string (item to delete from the list)
+    Output: string[] (updated grocerylist)
+
+
+
