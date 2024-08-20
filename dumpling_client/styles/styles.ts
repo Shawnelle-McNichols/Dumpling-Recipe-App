@@ -67,6 +67,27 @@ const styles = StyleSheet.create({
         fontSize: 20,
         padding:5,
     },
+    titleContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 1,
+    },
+    stepContainer: {
+      gap: 8,
+      marginBottom: 8,
+    },
+    reactLogo: {
+      height: 70,
+      width: 70,
+      top:0,
+      left: '43%',
+      position: 'absolute',
+    },
+    divider: {
+      height: 1,             
+      backgroundColor: '#d3d3d3', 
+      marginVertical: 70,    
+    },
 
 
 });

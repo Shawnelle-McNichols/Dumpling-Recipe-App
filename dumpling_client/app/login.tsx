@@ -34,7 +34,7 @@ export default function Login() {
           secureTextEntry/>
       </View>
       <View style={styles.form_group}>
-        <TouchableOpacity style={styles.btn_main_md} onPress={handleLogin}><Text style={styles.whitefont}>Login</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.btn_main_md} onPress={handleLogin}><Text style={styles.whitefont}><Link href="/(tabs)">Login</Link></Text></TouchableOpacity>
       </View>
 
     </View>
