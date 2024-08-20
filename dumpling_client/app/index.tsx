@@ -1,7 +1,7 @@
 import { Text, View, Image, Pressable, TouchableOpacity} from "react-native";
 import styles from "../styles/styles";
 import { Link } from "expo-router";
-const logo = require("../assets/images/Dumpling.png");
+const logo = require("../assets/images/react-logo-2.png");
 
 export default function Welcome() {
 

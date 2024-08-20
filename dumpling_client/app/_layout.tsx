@@ -22,6 +22,15 @@ export default function RootLayout() {
         headerTintColor:"#011627",
         headerBackTitleVisible:false,
         }}/>
+        <Stack.Screen name="(tabs)" 
+      options={{
+        headerBackVisible:true,
+        headerTitle:"",
+        headerStyle:{backgroundColor:"transparent"},
+        headerTintColor:"#011627",
+        headerBackTitleVisible:false,
+        headerShown:false,
+        }}/>
     </Stack>
   );
 }
