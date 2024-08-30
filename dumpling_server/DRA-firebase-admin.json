@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "dumpling-recipe-app",
+  "private_key_id": "0531e99802dd912c7109bdfcec9768db57483ecf",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC0jydmbH9AwmBQ\ntEXhZfdaPoscc7TCjot0qMQSs+cZt45NUxEv9Oqait9y0DEyZldN77M7iVPsmpeZ\nFbS2tjuRI9sebZ264AdVQ7p03FiNkdarKRz6CZtpLVPoYXy2hHmnnbSdcJBI1HhW\ntGIpeetqpVwPvID3pTX/YIkwcRl70/NZz6Bc4U2jI+Yv9uQFbL+SoE49JbiVUZaK\nszzub/iGz5XP5KhvSmzNyIHn2E2csTFvHT1/MvJJNb8ADtqkfVmQqO9JKsFe3maw\ntIamIvGDOv8UMMppSxFNbg9Gj4InaCLvLgUATPmkO9UYKGJbS45mhfy9WN6Ryhbd\nbXZI+RkTAgMBAAECggEADFZTvN3g/A3MAveuZq5O7m2jl7gYO8r9oGT/sL92JP2z\nzXjFjd9QQGsIxZGQKv9vK7YbKxBBGcOeZCllha6B93LZwASBaIlyNtM/5EhCDLpQ\nTrWqczNA2TjtqM0wdlAq99cAxlkwoqlR56q/olHgUhMmbTTWIxW40NBJz3OK6Dj/\nm1+vE0t7zoS3RY4oTfF9P7+elF1k07WK8XE2LrcSuXH11VvkXM5nJmcsHOQRyKZc\ntQpaz2AZNSZQO+N2TACsz4Ayi2jV61QusdjgbsQvdHWtsg9SOHJBMQVBzy6JTG62\ncptk7fYCRQg13hMOmf4iZTioJkpDTM3XjSC4dKuCEQKBgQD2IGBXiyK5n/w3/hr/\n7ONSbRfgEShEEOdaK3Mw4i0ldNXwIJXaBwsqBCOTmYiciKDtOh4fHEz1nmrVCoDT\nEnvI+MfMZc1TqQAwXsn/tfSCtMHsdQvBm6d554ExuO5+jB5z1omdGkZa/1YfQ/0f\nC/3HHxJWqQ/dTDpI2U+vSQGWVQKBgQC7zW1QpxCb5sUFEz/UT8X06G1tmd6EHkqG\n+kgvuaNbVHrjlHRTHL24R5/8IxTiUP8nFdYUkZw02XgrWSjUuJir6OL2jEaZffOX\ngSlldTvpc/e/vhJhp/69Dm6XGMHNIH1QWZgyxNCGdaYWbVPQV2ExiOgUXC3uOxeA\njf2sKmNJxwKBgQDD+pO8IXXNCK70hslI738yqttP91lwmWUeT2qxiecY5CdVxRyN\nNv6Uvib16FL3EXPScWx6qTY+fZ3jdTGO4DDgnfe5sXYFH5Se71s42dGQIg4oEisC\nRsbcMpKU3QRKj5fP9QwupDVRT+9rhd+PUSUJ4JvhlUykkYX3a9IfaKpy4QKBgHBO\nNXvQnB8OzmztiPMWzWNahu3O4QES+DBlhTt9ANJB38cuZK269z03H9XwyLFaDGs8\nJKxiMw5rqfAKPl+PEEVlXCxh0GpDpqLIK5AvnidKITK5oFZj1vMJqVqUBHj9X9Ln\n8RsTFTwDKNIqiL+DMW0k2NwsD49yKOjIgJUvN/bLAoGACZyaALRpDbty/PY4Yjb4\nQOfZWP/Eo3ymtQDL1LuW2P0XQYSaFKyd5yWwDpin/NHQS7mBB4I0rjCL9W2dS+IH\na2w6shbkEwXFZR2PY9rcx4o0bThU4GQ7bBiEP8pPCUyzHMZHreKNl2b5rdy6JpXw\nOp/YwhHYtPdDfLXZ7PQC6ig=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-et80m@dumpling-recipe-app.iam.gserviceaccount.com",
+  "client_id": "112343624814017168201",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-et80m%40dumpling-recipe-app.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
