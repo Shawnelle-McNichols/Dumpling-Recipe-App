@@ -25,6 +25,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 8,
     },
+    btn_main_sm: {
+        margin: 10,
+        backgroundColor: "#F59D56",
+        width: 100,
+        height: 30,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 8,
+    },
     btn_sec: {
         margin: 10,
         backgroundColor: "rgba(245, 157, 86, 0.2)",
@@ -33,7 +42,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 8,
-        elevation:3,
+        elevation: 3,
     },
     whitefont: {
         color: "#fdfffc",
@@ -43,10 +52,10 @@ const styles = StyleSheet.create({
         color: "#F59D56",
         fontSize: 20,
     },
-    
+
     header: {
         fontSize: 40,
-        marginBottom:5
+        marginBottom: 5
     },
     //Forms
     form_group: {
@@ -56,39 +65,63 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 18,
         marginBottom: 5,
-        
+
     },
     input: {
         width: 350,
-        height: 60,
+        height: 50,
         borderColor: "rgba(245, 157, 86, 0.5)",
         borderWidth: 1,
         borderRadius: 8,
-        fontSize: 20,
-        padding:5,
+        fontSize: 18,
+        padding: 5,
     },
     titleContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 1,
     },
     stepContainer: {
-      gap: 8,
-      marginBottom: 8,
+        gap: 8,
+        marginBottom: 8,
     },
     reactLogo: {
-      height: 70,
-      width: 70,
-      top:0,
-      left: '43%',
-      position: 'absolute',
+        height: 70,
+        width: 70,
+        top: 0,
+        left: '43%',
+        position: 'absolute',
     },
     divider: {
-      height: 1,             
-      backgroundColor: '#d3d3d3', 
-      marginVertical: 70,    
+        height: 1,
+        backgroundColor: '#d3d3d3',
+        marginVertical: 70,
     },
-
+    //Choices
+    grid:{
+        flexDirection: "row",
+        flexWrap:"wrap",
+        justifyContent:"space-between"
+    },
+    option: {
+        width: 110,
+        textAlign:"center",
+        padding: 5,
+        margin: 5,
+        marginBottom:15,
+        borderWidth: 1,
+        borderBlockColor: "black",
+        borderRadius:10,
+    },
+    selectedOption:{
+        backgroundColor: "#F59D56",
+        color: "#fdfffc",
+        width: 110,
+        textAlign:"center",
+        padding: 5,
+        margin: 5,
+        borderRadius:10,
+    }
 
 });
 export default styles;

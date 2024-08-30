@@ -1,13 +1,68 @@
+import { useEffect, useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform, View } from 'react-native';
+import { StyleSheet, Image, Platform, View, TextInput, TouchableOpacity, Text, Alert, FlatList } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { auth, db } from "../../scripts/firebaseConfig.mjs";
+import { ref, set, remove, onValue, push } from "firebase/database";
+
 import styles from "../../styles/styles";
+import { useRouter } from 'expo-router';
+
 export default function PantryScreen() {
+  const [newItem, setNewItem] = useState<string>("");
+  const [pantryItems, setPantryItems] = useState<{ key: string; name: string }[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const pantryRef = ref(db, `users/${user.uid}/pantry`);
+      const unsubscribe = onValue(pantryRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const items = Object.entries(data).map(([key, value]) => ({
+            key,
+            name: value as string
+          }));
+          setPantryItems(items);
+        } else {
+          setPantryItems([]);
+        }
+      });
+      return () => unsubscribe();
+    }
+  }, []);
+
+  const addItem = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      if (newItem == "") {
+        Alert.alert("Enter an item.");
+        return;
+      }
+      const pantryRef = ref(db, `users/${user.uid}/pantry`);
+      const newItemRef = push(pantryRef);
+      await set(newItemRef, newItem.trim());
+      setNewItem("");
+    } else {
+      Alert.alert("Please enter an item.");
+    }
+  }
+
+  const removeItem = async (key:string) => {
+    const user = auth.currentUser;
+    if(user){
+      const itemRef = ref(db, `users/${user.uid}/pantry/${key}`);
+      await remove(itemRef);
+    }else{
+      Alert.alert("You need to log in to change this information.")
+    }
+  }
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#ffffff', dark: '#353636' }}
@@ -17,83 +72,40 @@ export default function PantryScreen() {
             source={require('@/assets/images/react-logo.png')}
             style={styles.reactLogo}
           />
-          <ThemedView style={styles.divider}/>
+          <ThemedView style={styles.divider} />
         </View>
       }>
-      {/* Thisis the start of the edit area */}
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+        <ThemedText type="title">Pantry</ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library
-          to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-      {/* This is the end of the edit area */}
+      <ThemedView>
+        <View style={styles.form_group}>
+          <ThemedText >Add Pantry Item</ThemedText>
+          <TextInput
+            style={styles.input}
+            value={newItem}
+            onChangeText={setNewItem}
+            autoCapitalize="none" />
+        </View>
+        <View style={styles.form_group} >
+          <TouchableOpacity style={styles.btn_main_sm} onPress={addItem}>
+            <Text style={styles.whitefont}>Add</Text>
+          </TouchableOpacity>
+        </View>
+      </ThemedView>
+      <ThemedView>
+        <ThemedText type="subtitle">Pantry Items</ThemedText>
+        <FlatList
+          data={pantryItems}
+          keyExtractor={(item) => item.key}
+          renderItem={({ item }) => (
+            <View><Text>{item.name}</Text>
+              <TouchableOpacity onPress={() => removeItem(item.key)}>
+                <Ionicons name="trash-outline" size={24} color="red" /></TouchableOpacity>
+            </View>
+          )}
+        />
+      </ThemedView>
     </ParallaxScrollView>
   );
 }

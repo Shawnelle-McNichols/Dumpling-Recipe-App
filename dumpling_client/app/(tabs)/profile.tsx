@@ -1,14 +1,53 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform, View } from 'react-native';
-
+import React, { useState, useEffect } from 'react';
+import { Alert, Image, Platform, View, Text } from 'react-native';
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import styles from "../../styles/styles";
+import { Link, useRouter } from 'expo-router';
+import { auth, db } from "../../scripts/firebaseConfig.mjs";
+import { ref, get } from "firebase/database";
+
 
 export default function ProfileScreen() {
+  const [username, setUsername] = useState<string>("");
+  const [favCuisines, setFavCuisines] = useState<string[]>([]);
+  const [myDiet, setMyDiet] = useState<string[]>([]);
+  const [favDishes, setFavDishes] = useState<string[]>([]);
+  const [allergies, setAllergies] = useState<string[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const userRef = ref(db, `users/${user.uid}`);
+          const snapshot = await get(userRef);
+
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+
+            setUsername(data.username || "");
+            setFavCuisines(data.favCuisines || []);
+            setMyDiet(data.myDiet || []);
+            setFavDishes(data.favDishes || []);
+            setAllergies(data.allergies || []);
+          } else {
+            Alert.alert("User needs to set up their profile.");
+          }
+        } catch (error) {
+          Alert.alert("Error fetching user data");
+        }
+      } else {
+        Alert.alert("No user signed in");
+      }
+    }
+    fetchUserData();
+  }, []);
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#ffffff', dark: '#353636' }}
@@ -18,81 +57,58 @@ export default function ProfileScreen() {
             source={require('@/assets/images/react-logo.png')}
             style={styles.reactLogo}
           />
-          <ThemedView style={styles.divider}/>
+          <ThemedView style={styles.divider} />
         </View>
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+        <ThemedText type="title">Welcome, {username} </ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library
-          to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
+      <Text>Let have a look at your profile!</Text>
+
+      <View>
+        <ThemedText>Allergies</ThemedText>
+        {allergies.length > 0 ? (
+          allergies.map((allergy,index) => (
+            <Text key={index}>{allergy}</Text>
+          ))
+        ): (
+          <Text>None</Text>
+        )}
+      </View>
+
+      <View>
+        <Text>Diet</Text>
+        {myDiet.length > 0 ? (
+          myDiet.map((diet,index) => (
+            <Text key={index}>{diet}</Text>
+          ))
+        ): (
+          <Text>None</Text>
+        )}
+      </View>
+
+      <View>
+        <Text>Favourite Cuisines</Text>
+        {favCuisines.length > 0 ? (
+          favCuisines.map((cuisine,index) => (
+            <Text key={index}>{cuisine}</Text>
+          ))
+        ): (
+          <Text>None</Text>
+        )}
+      </View>
+
+      <View>
+        <Text>Favourite Dishes</Text>
+        {favDishes.length > 0 ? (
+          favDishes.map((dish,index) => (
+            <Text key={index}>{dish}</Text>
+          ))
+        ): (
+          <Text>None</Text>
+        )}
+      </View>
+      <Link href="../../forms/editprofile">Edit profile</Link>
     </ParallaxScrollView>
   );
 }
