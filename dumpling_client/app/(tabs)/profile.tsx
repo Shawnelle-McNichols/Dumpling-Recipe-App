@@ -10,6 +10,8 @@ import { Link, useRouter } from 'expo-router';
 import { auth, db } from "../../scripts/firebaseConfig.mjs";
 import { ref, get } from "firebase/database";
 
+const profImg = require("../../assets/images/profileimg.png");
+
 
 export default function ProfileScreen() {
   const [username, setUsername] = useState<string>("");
@@ -60,55 +62,60 @@ export default function ProfileScreen() {
           <ThemedView style={styles.divider} />
         </View>
       }>
+      <View style={styles.container2}>
+        <Image source={profImg} />
+      </View >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome, {username} </ThemedText>
+        <ThemedText style={styles.header}>Welcome, {username} </ThemedText>
       </ThemedView>
-      <Text>Let have a look at your profile!</Text>
+      <View><Text style={styles.blacktext}>Let's have a look at your profile!</Text></View>
 
-      <View>
-        <ThemedText>Allergies</ThemedText>
+      <View style={styles.view}>
+        <ThemedText style={styles.subtitle}>Allergies</ThemedText>
         {allergies.length > 0 ? (
-          allergies.map((allergy,index) => (
-            <Text key={index}>{allergy}</Text>
+          allergies.map((allergy, index) => (
+            <Text style={styles.blacktext} key={index}>{allergy}</Text>
           ))
-        ): (
+        ) : (
           <Text>None</Text>
         )}
       </View>
-
-      <View>
-        <Text>Diet</Text>
+      <View style={styles.view}>
+        <Text style={styles.subtitle}>Diet</Text>
         {myDiet.length > 0 ? (
-          myDiet.map((diet,index) => (
-            <Text key={index}>{diet}</Text>
+          myDiet.map((diet, index) => (
+            <Text style={styles.blacktext} key={index}>{diet}</Text>
           ))
-        ): (
+        ) : (
           <Text>None</Text>
         )}
       </View>
 
-      <View>
-        <Text>Favourite Cuisines</Text>
+      <View style={styles.view}>
+        <Text style={styles.subtitle}>Favourite Cuisines</Text>
         {favCuisines.length > 0 ? (
-          favCuisines.map((cuisine,index) => (
-            <Text key={index}>{cuisine}</Text>
+          favCuisines.map((cuisine, index) => (
+            <Text style={styles.blacktext} key={index}>{cuisine}</Text>
           ))
-        ): (
+        ) : (
           <Text>None</Text>
         )}
       </View>
 
-      <View>
-        <Text>Favourite Dishes</Text>
+      <View style={styles.view}>
+        <Text style={styles.subtitle}>Favourite Dishes</Text>
         {favDishes.length > 0 ? (
-          favDishes.map((dish,index) => (
-            <Text key={index}>{dish}</Text>
+          favDishes.map((dish, index) => (
+            <Text style={styles.blacktext} key={index}>{dish}</Text>
           ))
-        ): (
+        ) : (
           <Text>None</Text>
         )}
       </View>
-      <Link href="../../forms/editprofile">Edit profile</Link>
+      <View style={styles.view} >
+      <Link href="../../forms/editprofile"><Text style={styles.colorfont}>Edit profile</Text></Link>
+      <Text style={styles.colorfont}>Logout</Text>
+      </View>   
     </ParallaxScrollView>
   );
 }

@@ -54,59 +54,63 @@ export default function PantryScreen() {
     }
   }
 
-  const removeItem = async (key:string) => {
+  const removeItem = async (key: string) => {
     const user = auth.currentUser;
-    if(user){
+    if (user) {
       const itemRef = ref(db, `users/${user.uid}/pantry/${key}`);
       await remove(itemRef);
-    }else{
+    } else {
       Alert.alert("You need to log in to change this information.")
     }
   }
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#ffffff', dark: '#353636' }}
-      headerImage={
-        <View>
-          <Image
-            source={require('@/assets/images/react-logo.png')}
-            style={styles.reactLogo}
+    <>
+      <ParallaxScrollView
+        headerBackgroundColor={{ light: '#ffffff', dark: '#353636' }}
+        headerImage={
+          <View>
+            <Image
+              source={require('@/assets/images/react-logo.png')}
+              style={styles.reactLogo}
+            />
+            <ThemedView style={styles.divider} />
+          </View>
+        }>
+      </ParallaxScrollView>
+      <View style={styles.container}>
+        <ThemedView style={styles.titleContainer}>
+          <ThemedText type="title">Pantry</ThemedText>
+        </ThemedView>
+        <ThemedView>
+          <View style={styles.form_group}>
+            <ThemedText >Add Pantry Item</ThemedText>
+            <TextInput
+              style={styles.input}
+              value={newItem}
+              onChangeText={setNewItem}
+              autoCapitalize="none" />
+          </View>
+          <View style={styles.form_group} >
+            <TouchableOpacity style={styles.btn_main_sm} onPress={addItem}>
+              <Text style={styles.whitefont}>Add</Text>
+            </TouchableOpacity>
+          </View>
+        </ThemedView>
+        <ThemedView>
+          <ThemedText type="subtitle">Pantry Items</ThemedText>
+          <FlatList
+            data={pantryItems}
+            keyExtractor={(item) => item.key}
+            renderItem={({ item }) => (
+              <View><Text>{item.name}</Text>
+                <TouchableOpacity onPress={() => removeItem(item.key)}>
+                  <Ionicons name="trash-outline" size={24} color="red" /></TouchableOpacity>
+              </View>
+            )}
           />
-          <ThemedView style={styles.divider} />
-        </View>
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Pantry</ThemedText>
-      </ThemedView>
-      <ThemedView>
-        <View style={styles.form_group}>
-          <ThemedText >Add Pantry Item</ThemedText>
-          <TextInput
-            style={styles.input}
-            value={newItem}
-            onChangeText={setNewItem}
-            autoCapitalize="none" />
-        </View>
-        <View style={styles.form_group} >
-          <TouchableOpacity style={styles.btn_main_sm} onPress={addItem}>
-            <Text style={styles.whitefont}>Add</Text>
-          </TouchableOpacity>
-        </View>
-      </ThemedView>
-      <ThemedView>
-        <ThemedText type="subtitle">Pantry Items</ThemedText>
-        <FlatList
-          data={pantryItems}
-          keyExtractor={(item) => item.key}
-          renderItem={({ item }) => (
-            <View><Text>{item.name}</Text>
-              <TouchableOpacity onPress={() => removeItem(item.key)}>
-                <Ionicons name="trash-outline" size={24} color="red" /></TouchableOpacity>
-            </View>
-          )}
-        />
-      </ThemedView>
-    </ParallaxScrollView>
+        </ThemedView>
+      </View>
+    </>
   );
 }
 

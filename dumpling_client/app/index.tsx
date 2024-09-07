@@ -1,22 +1,19 @@
 import { Text, View, Image, Pressable, TouchableOpacity } from "react-native";
 import styles from "../styles/styles";
 import { Link } from "expo-router";
-const logo = require("../assets/images/react-logo-2.png");
+import { ThemedView } from "@/components/ThemedView";
+const logo = require("../assets/images/Dumpling.png");
 const mascot = require("../assets/images/mascot.png")
 
 export default function Welcome() {
 
   return (
+    <Link href="/login">
     <View style={styles.container}>
-      <Link href="/login">
-        <Image source={logo} />
-        <View >
-          {/*<Link href="/signup" asChild><TouchableOpacity style={styles.btn_main}><Text style={styles.whitefont} >Signup</Text></TouchableOpacity></Link>
-        <Link href="/login" asChild><TouchableOpacity style={styles.btn_sec}><Text style={styles.colorfont} >Login</Text></TouchableOpacity></Link>*/}
-          <Image source={mascot} />
-        </View>
-      </Link>
+        <Image source={logo} style={styles.mainLogo} />
+        <Image source={mascot}/>
     </View>
+    </Link>
   );
 }
 

@@ -30,7 +30,7 @@ export default function Signup() {
 
   }
   return (
-    <View style={styles.container}>
+    <View style={styles.container2}>
       <Image source={logo} />
       <Text style={styles.header}>Sign up</Text>
       <Text>Already have an account? <Link href="/login">Login</Link></Text>
@@ -55,7 +55,7 @@ export default function Signup() {
         <TextInput style={styles.input}
           value={confirmPassword}
           onChangeText={setConfirmPassword}
-           />
+        />
       </View>
       <View style={styles.form_group}>
         <TouchableOpacity style={styles.btn_main_md} onPress={handleSignup}>

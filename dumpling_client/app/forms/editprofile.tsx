@@ -65,6 +65,7 @@ export default function EditProfile() {
     }
     return (
         <ScrollView>
+            <View style={styles.container}>
             <Text style={styles.header}>Set up Profile</Text>
             <Text>Before you continue, we need to know a few important details.</Text>
 
@@ -149,7 +150,7 @@ export default function EditProfile() {
                     <Text style={styles.whitefont}>Complete Profile</Text>
                 </TouchableOpacity>
             </View>
-
+            </View>
         </ScrollView>
     )
 }

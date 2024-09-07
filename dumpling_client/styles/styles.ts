@@ -6,12 +6,21 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        padding:10
+    },
+    container2: {
+        backgroundColor: "#FDFFFC",
+        flex: 1,
+        alignItems: "center",
+    },
+    view: {
+        padding:10
     },
     btn_main: {
         margin: 10,
         backgroundColor: "#F59D56",
         width: 350,
-        height: 60,
+        height: 55,
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 8,
@@ -19,8 +28,8 @@ const styles = StyleSheet.create({
     btn_main_md: {
         margin: 10,
         backgroundColor: "#F59D56",
-        width: 200,
-        height: 60,
+        width: 350,
+        height: 55,
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 8,
@@ -38,7 +47,17 @@ const styles = StyleSheet.create({
         margin: 10,
         backgroundColor: "rgba(245, 157, 86, 0.2)",
         width: 350,
-        height: 60,
+        height: 55,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 8,
+        elevation: 3,
+    },
+    btn_sec_sm: {
+        margin: 10,
+        backgroundColor: "rgba(245, 157, 86, 0.2)",
+        width: 175,
+        height: 45,
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 8,
@@ -52,10 +71,20 @@ const styles = StyleSheet.create({
         color: "#F59D56",
         fontSize: 20,
     },
-
+    blacktext: {
+        color: "#25242A",
+        fontSize: 16,
+    },
+    subtitle: {
+        height:25,
+        backgroundColor:"#FDEADB",
+        color: "#F59D56",
+        fontSize: 20,
+    },
     header: {
-        fontSize: 40,
-        marginBottom: 5
+        paddingTop:10,
+        fontSize: 36,
+        margin: 5
     },
     //Forms
     form_group: {
@@ -69,7 +98,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: 350,
-        height: 50,
+        height: 55,
         borderColor: "rgba(245, 157, 86, 0.5)",
         borderWidth: 1,
         borderRadius: 8,
@@ -121,6 +150,11 @@ const styles = StyleSheet.create({
         padding: 5,
         margin: 5,
         borderRadius:10,
+    },
+    //Images
+    mainLogo:{
+        width:300,
+        marginBottom:10
     }
 
 });
