@@ -8,6 +8,9 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import styles from "../../styles/styles";
 import GroceryList from '../GroceryList';
+import { auth, db } from "../../scripts/firebaseConfig.mjs";
+import { ref, get } from "firebase/database";
+
 
 
 export default function MyRecipesScreen() {
