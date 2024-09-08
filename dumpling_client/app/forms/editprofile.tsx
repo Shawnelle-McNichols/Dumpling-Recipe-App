@@ -13,17 +13,17 @@ export default function EditProfile() {
     const [favCuisines, setFavCuisines] = useState<string[]>([]);
     const [myDiet, setMyDiet] = useState<string[]>([]);
     const [favDishes, setFavDishes] = useState<string[]>([]);
-    const [allergies, setAllergies] = useState<string[]>([]);
+    const [intolerances, setIntolerances] = useState<string[]>([]);
    // const [customCuisine, setCustomCuisine] = useState<string>("");
    // const [customDiet, setCustomDiet] = useState<string>("");
    // const [customDish, setCustomDish] = useState<string>("");
    //const [customAllergy, setCustomAllergy] = useState<string>("[]");
     const router = useRouter();
 
-    const Cuisines = ["Caribbean", "Chinese", "Italian", "Mexican", "Indian", "Japanese","Korean","Mediterranean","German"];
-    const Diets = ["Vegan", "Vegetarian", "Keto", "Gluten-Free", "Lactose-Free", "Paleo"];
+    const Cuisines = ["Caribbean", "Chinese", "Italian", "Mexican", "Indian", "Japanese","Korean","Mediterranean","French"];
+    const Diets = ["Vegan", "Vegetarian", "Ketogenic", "Gluten Free", "Low FODMAP", "Paleo"];
     const Dishes = ["Pizza", "Pasta", "Salad", "Sandwiches", "Soup", "Seafood"];
-    const Allergies = ["Peanuts", "Shellfish", "Lactose", "Gluten", "Soy","Eggs"];
+    const Intolerances = ["Peanut", "Shellfish", "Dairy", "Gluten", "Soy","Egg"];
 
     const toggleSelection = (item:string, list:string[], setList: React.Dispatch<React.SetStateAction<string[]>>) => {
         if (list.length < 3 || list.includes(item)){
@@ -50,7 +50,7 @@ export default function EditProfile() {
                     favCuisines,
                     myDiet,
                     favDishes,
-                    allergies,
+                    intolerances,
                 });
                 Alert.alert("Profile setup complete");
                 router.push("/(tabs)");
@@ -129,11 +129,11 @@ export default function EditProfile() {
                 onSubmitEditing={() => addCustomItem(customDish,setCustomDish,favDishes,setFavDishes)}/>*/}
             </View>
             <View style={styles.form_group}>
-                <Text style={styles.label}>Do you have any allergies?</Text>
+                <Text style={styles.label}>Do you have any allergies/intolerances?</Text>
                 <View style={styles.grid}>
-                {Allergies.map((allergy)=> (
-                    <TouchableOpacity key={allergy} onPress={() => toggleSelection(allergy, allergies,setAllergies)}>
-                        <Text style={allergies.includes(allergy) ? styles.selectedOption : styles.option}>{allergy}</Text>
+                {Intolerances.map((intolerance)=> (
+                    <TouchableOpacity key={intolerance} onPress={() => toggleSelection(intolerance, intolerances,setIntolerances)}>
+                        <Text style={intolerances.includes(intolerance) ? styles.selectedOption : styles.option}>{intolerance}</Text>
                     </TouchableOpacity>
                 ))}
                 </View>

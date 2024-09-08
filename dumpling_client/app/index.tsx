@@ -10,8 +10,10 @@ export default function Welcome() {
   return (
     <Link href="/login">
     <View style={styles.container}>
+
         <Image source={logo} style={styles.mainLogo} />
         <Image source={mascot}/>
+        <Text>Click anywhere to continue</Text>
     </View>
     </Link>
   );

@@ -18,7 +18,7 @@ export default function ProfileScreen() {
   const [favCuisines, setFavCuisines] = useState<string[]>([]);
   const [myDiet, setMyDiet] = useState<string[]>([]);
   const [favDishes, setFavDishes] = useState<string[]>([]);
-  const [allergies, setAllergies] = useState<string[]>([]);
+  const [intolerances, setIntolerances] = useState<string[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function ProfileScreen() {
             setFavCuisines(data.favCuisines || []);
             setMyDiet(data.myDiet || []);
             setFavDishes(data.favDishes || []);
-            setAllergies(data.allergies || []);
+            setIntolerances(data.intolerances || []);
           } else {
             Alert.alert("User needs to set up their profile.");
           }
@@ -72,12 +72,12 @@ export default function ProfileScreen() {
 
       <View style={styles.view}>
         <ThemedText style={styles.subtitle}>Allergies</ThemedText>
-        {allergies.length > 0 ? (
-          allergies.map((allergy, index) => (
-            <Text style={styles.blacktext} key={index}>{allergy}</Text>
+        {intolerances.length > 0 ? (
+          intolerances.map((intolerance, index) => (
+            <Text style={styles.blacktext} key={index}>{intolerance}</Text>
           ))
         ) : (
-          <Text>None</Text>
+          <Text style={styles.blacktext}>None</Text>
         )}
       </View>
       <View style={styles.view}>
@@ -87,7 +87,7 @@ export default function ProfileScreen() {
             <Text style={styles.blacktext} key={index}>{diet}</Text>
           ))
         ) : (
-          <Text>None</Text>
+          <Text style={styles.blacktext}>None</Text>
         )}
       </View>
 
@@ -98,7 +98,7 @@ export default function ProfileScreen() {
             <Text style={styles.blacktext} key={index}>{cuisine}</Text>
           ))
         ) : (
-          <Text>None</Text>
+          <Text style={styles.blacktext}>None</Text>
         )}
       </View>
 
@@ -109,7 +109,7 @@ export default function ProfileScreen() {
             <Text style={styles.blacktext} key={index}>{dish}</Text>
           ))
         ) : (
-          <Text>None</Text>
+          <Text style={styles.blacktext}>None</Text>
         )}
       </View>
       <View style={styles.view} >

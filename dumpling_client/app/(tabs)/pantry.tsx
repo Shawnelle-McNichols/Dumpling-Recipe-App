@@ -16,7 +16,6 @@ import { useRouter } from 'expo-router';
 export default function PantryScreen() {
   const [newItem, setNewItem] = useState<string>("");
   const [pantryItems, setPantryItems] = useState<{ key: string; name: string }[]>([]);
-  const router = useRouter();
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -76,41 +75,66 @@ export default function PantryScreen() {
             <ThemedView style={styles.divider} />
           </View>
         }>
-      </ParallaxScrollView>
-      <View style={styles.container}>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="title">Pantry</ThemedText>
-        </ThemedView>
-        <ThemedView>
-          <View style={styles.form_group}>
-            <ThemedText >Add Pantry Item</ThemedText>
-            <TextInput
-              style={styles.input}
-              value={newItem}
-              onChangeText={setNewItem}
-              autoCapitalize="none" />
-          </View>
-          <View style={styles.form_group} >
+        <View >
+          <ThemedView style={styles.titleContainer}>
+            <ThemedText style={styles.header}>Pantry</ThemedText>
+          </ThemedView>
+          <ThemedView style={styles.view}>
+            <ThemedText style={styles.subtitle}>Pantry Items</ThemedText>
+            <FlatList
+              data={pantryItems}
+              keyExtractor={(item) => item.key}
+              renderItem={({ item }) => (
+                <View style={style.pantryItem}>
+                  <Text style={styles.blacktext}>{item.name}</Text>
+                  <TouchableOpacity onPress={() => removeItem(item.key)}>
+                    <Ionicons name="trash-outline" size={24} color="red" />
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+          </ThemedView>
+          <ThemedView style={style.form}>
+            <View style={styles.form_group}>
+              <ThemedText style={styles.blacktext}>Add Pantry Item</ThemedText>
+              <TextInput
+                style={style.input}
+                value={newItem}
+                onChangeText={setNewItem}
+                autoCapitalize="none" />
+            </View>
             <TouchableOpacity style={styles.btn_main_sm} onPress={addItem}>
-              <Text style={styles.whitefont}>Add</Text>
-            </TouchableOpacity>
-          </View>
-        </ThemedView>
-        <ThemedView>
-          <ThemedText type="subtitle">Pantry Items</ThemedText>
-          <FlatList
-            data={pantryItems}
-            keyExtractor={(item) => item.key}
-            renderItem={({ item }) => (
-              <View><Text>{item.name}</Text>
-                <TouchableOpacity onPress={() => removeItem(item.key)}>
-                  <Ionicons name="trash-outline" size={24} color="red" /></TouchableOpacity>
-              </View>
-            )}
-          />
-        </ThemedView>
-      </View>
+                <Text style={styles.whitefont}>+</Text>
+              </TouchableOpacity>
+          </ThemedView>
+        </View>
+      </ParallaxScrollView>
+
     </>
   );
 }
 
+const style = StyleSheet.create({
+  pantryItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 5,
+    borderBottomColor: "#F59D56",
+    borderBottomWidth: .5
+  },
+  form:{
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems:"center"
+  },
+  input: {
+    width: 250,
+    height: 55,
+    borderColor: "rgba(245, 157, 86, 0.5)",
+    borderWidth: 1,
+    borderRadius: 8,
+    fontSize: 18,
+    padding: 5,
+}
+
+})
