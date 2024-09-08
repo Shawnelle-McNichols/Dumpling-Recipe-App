@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         elevation: 3,
     },
+    //Fonts
     whitefont: {
         color: "#fdfffc",
         fontSize: 20,
@@ -72,14 +73,22 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     blacktext: {
+        padding:5,
         color: "#25242A",
-        fontSize: 16,
+        fontSize: 20,
+    },
+    blacktextbold: {
+        padding:5,
+        color: "#25242A",
+        fontSize: 20,
+        fontWeight: "bold"
     },
     subtitle: {
-        height:25,
+        height:40,
+        padding:5,
         backgroundColor:"#FDEADB",
         color: "#F59D56",
-        fontSize: 20,
+        fontSize: 25,
     },
     header: {
         paddingTop:10,

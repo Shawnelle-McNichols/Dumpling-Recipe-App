@@ -29,7 +29,7 @@ export default function MyRecipesScreen() {
         <ThemedText type="title">Grocery List</ThemedText>
       </ThemedView>
       {/* Adding the GroceryList component to display the list */}
-      <ThemedView style={styles.groceryContainer}>
+      <ThemedView style={styles.container}>
         <GroceryList />
       </ThemedView>
       {/* End of the modified area */}
