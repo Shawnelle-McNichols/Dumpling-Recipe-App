@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { View, Text, FlatList, Image,Alert, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -7,30 +7,29 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import styles from '@/styles/styles';
 import { auth, db } from "../../scripts/firebaseConfig.mjs";
-import { get, ref } from 'firebase/database';
+import { get, push, ref, set } from 'firebase/database';
 import RecipeCard from '@/components/RecipeCard';
 import RecipeCardSmall from '@/components/RecipeCardSmall';
+import MyContext from '@/components/MyContext';
 
 // Define the Recipe type
 type Ingredient = {
+  id: number;
   name: string;
+  image: string;
+  amount: number;
+  unit: string;
 };
 
 type Recipe = {
-  id: number;
-  title:string;
-  image:string;
-  time:number;
-  ingredients:{
-    text:string,
-    quantity:number,
-    measure:string,
-    food:string,
-    weight:number,
-    foodId:string,
-  }[];
-};
-
+    id: number;
+    title: string;
+    image: string;
+    usedIngredientCount: number;
+    missedIngredientCount: number;
+    missedIngredients: Ingredient[];
+  };
+  
 
 // type Recipe = {
 //   id: number;
@@ -38,17 +37,105 @@ type Recipe = {
 //   image: string;
 //   servings:number;
 //   readyInMinutes:number;
-//   dairyFree: boolean;
-//   diets:string[];
-//   glutenFree:boolean;
-//   ketogenic:boolean;
-//   vegan:boolean;
-//   vegetarian:boolean;
-//   usedIngredientCount: number;
-//   missedIngredientCount: number;
-//   missedIngredients:Array<string>;
+//   extendedIngredients:string[];
+  
 // };
 
+// type Recipe = {
+//   id: number;
+//   title: string;
+//   image: string;
+//   usedIngredientCount: number;
+//   missedIngredientCount: number;
+//   missedIngredients:string[];
+// };
+const recipes: Recipe = [
+  {
+      id: 645555,
+      title: "Green Tomato Salad",
+      image: "https://img.spoonacular.com/recipes/645555-312x231.jpg",
+      imageType: "jpg",
+      usedIngredientCount: 1,
+      missedIngredientCount: 2,
+      missedIngredients: [
+          {
+              id: 10211111,
+              amount: 1,
+              unit: "teaspoon",
+              name: "sumac powder",
+              image: "https://img.spoonacular.com/ingredients_100x100/dried-sumac.jpg"
+          },
+          {
+              id: 99226,
+              amount: 1,
+              unit: "handful",
+              name: "sage and mint leaves",
+              image: "https://img.spoonacular.com/ingredients_100x100/fresh-sage.png"
+          }
+      ]
+  },
+  {
+      id: 715870,
+      title: "Salsa",
+      image: "https://img.spoonacular.com/recipes/715870-312x231.jpg",
+      imageType: "jpg",
+      usedIngredientCount: 1,
+      missedIngredientCount: 3,
+      missedIngredients: [
+          {
+              id: 15012,
+              amount: 1,
+              unit: "serving",
+              name: "texas cowboy caviar",
+              image: "https://img.spoonacular.com/ingredients_100x100/caviar.png"
+          },
+          {
+              id: 6164,
+              amount: 1,
+              unit: "serving",
+              name: "cranberry avocado salsa",
+              image: "https://img.spoonacular.com/ingredients_100x100/salsa.png"
+          },
+          {
+              id: 27028,
+              amount: 1,
+              unit: "serving",
+              name: "roasted tomatillo salsa",
+              image: "https://img.spoonacular.com/ingredients_100x100/salsa-verde.png"
+          }
+      ]
+  },
+  {
+      id: 1674265,
+      title: "Easy Tomato Soup",
+      image: "https://img.spoonacular.com/recipes/1674265-312x231.jpg",
+      usedIngredientCount: 1,
+      missedIngredientCount: 3,
+      missedIngredients: [
+          {
+              id: 1001,
+              amount: 4,
+              unit: "tablespoons",
+              name: "butter",
+              image: "https://img.spoonacular.com/ingredients_100x100/butter-sliced.jpg"
+          },
+          {
+              id: 11282,
+              amount: 1,
+              unit: "",
+              name: "onion",
+              image: "https://img.spoonacular.com/ingredients_100x100/brown-onion.png"
+          },
+          {
+              id: 6615,
+              amount: 1.5,
+              unit: "cups",                 
+              name: "vegetable broth",
+              image: "https://img.spoonacular.com/ingredients_100x100/chicken-broth.png"
+          }
+      ]
+  }
+]
 
 
 // Example Component to fetch and display recipes
@@ -61,8 +148,40 @@ export default function RecipesScreen() {
   const [pantry,setPantry] = useState<string[]>([]);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<string | null>(null);
-
+  const context = useContext(MyContext);
+  const [newItem, setNewItem] = useState<string>("");
   // Fetch recipes based on ingredients
+ 
+  const addGroceries= async () => {
+    const user = auth.currentUser;
+    if (user) {
+      if (newItem == "") {
+        Alert.alert("Enter an item.");
+        return;
+      }
+      const pantryRef = ref(db, `users/${user.uid}/pantry`);
+      const newItemRef = push(pantryRef);
+      await set(newItemRef, newItem.trim());
+      setNewItem("");
+    } else {
+      Alert.alert("Please enter an item.");
+    }
+  }
+  const addRecipes = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      if (newItem == "") {
+        Alert.alert("Enter an item.");
+        return;
+      }
+      const pantryRef = ref(db, `users/${user.uid}/pantry`);
+      const newItemRef = push(pantryRef);
+      await set(newItemRef, newItem.trim());
+      setNewItem("");
+    } else {
+      Alert.alert("Please enter an item.");
+    }
+  }
   useEffect(() => {
     const fetchUserData = async () => {
       const user = auth.currentUser;
@@ -94,91 +213,96 @@ export default function RecipesScreen() {
 
     const fetchRecipes = async () => {
       try {
-        const thisPantry: String = Object.values(pantry).join(',');
+        const thisPantry: String = Object.values(pantry).join(','); 
+        const thisIntolerances: String = Object.values(intolerances).join(',');
+        const thisDiet: String = Object.values(myDiet).join(',');
+        console.log("get thisIntolerances: here" + thisIntolerances);
+        console.log("get thisDiet: here" + thisDiet);
         console.log("get pantry:" + thisPantry);
-        const response = await axios.get('https://api.edamam.com/api/recipes/v2', {
+
+        /* ----------- use the spoonacular Apis : findByIngredients ----------------*/
+        const response = await axios.get('https://api.spoonacular.com/recipes/findByIngredients', {
           params: {
-            app_id: '63c98e14',
-            app_key: '29544855461e32b396324e77cb50dd89',
-            q: thisPantry,
-            type: 'public',
-            from: 0,   // Start from the first result
-            to: 5      // Retrieve 5 results
+            apiKey: 'e8099cbd3a264bd288bfa39b349bd79a',
+            ingredients:thisPantry,
+            ranking:1,
+            number:3
           }
         });
-        const recipes = response.data.hits.map((hit: any) => ({
-          id: hit.recipe.uri.split('#')[1],  // Extract ID from the URI
-          title: hit.recipe.label,
-          image: hit.recipe.image,
-          time: hit.recipe.time,
-          ingredients: hit.recipe.ingredients.map((ingredient: any) => ({
-            text: ingredient.text,
-            quantity: ingredient.quantity,
-            measure: ingredient.measure,
-            food: ingredient.food,
-            weight: ingredient.weight,
-            foodId: ingredient.foodId
-          }))}));
-        console.log(recipes);
-        setRecipes(recipes);
-        // const recipeIds = response.data.map((item: { id: number }) => item.id);
-        // console.log(recipeIds);
-
-        // for (let e = 0; e < recipeIds.length; e++) {
-        //   const response2 = await axios.get(`https://api.spoonacular.com/recipes/${recipeIds[e]}/information`, {
-        //     params: {
-        //       apiKey: '7ba9b2ac70f3438dae91fc43b795e5b0'
+        console.log(response.data)
+        const allRecipes = response.data.results.map((item: any) => {
+          return {
+            id: item.id,
+            title: item.title,
+            image: item.image,
+            usedIngredientCount: item.usedIngredientCount,
+            missedIngredientCount: item.missedIngredientCount,
+            missedIngredients: item.missedIngredients.map((ingredient: any) => ({
+              id: ingredient.id,
+              name: ingredient.name,
+              image: ingredient.image,
+              amount: ingredient.amount,
+              unit: ingredient.unitShort
+            }))
+          };
+        });
+       
+        //   const user = auth.currentUser;
+        //   if (user) {
+        //     if (newItem == "") {
+        //       Alert.alert("Enter an item.");
+        //       return;
         //     }
-        //   })
-        //   var theRecipes = response.data.map((item: {
-        //     id: number;
-        //     title: string;
-        //     image: string;
-        //     servings: number;
-        //     readyInMinutes: number;
-        //     dairyFree: boolean;
-        //     diets: string[];
-        //     glutenFree: boolean;
-        //     ketogenic: boolean;
-        //     vegan: boolean;
-        //     vegetarian: boolean;
-        //     usedIngredientCount: number;
-        //     missedIngredientCount: number;
-        //     missedIngredients: { name: string; id: number }[]; // Ensure this matches the structure
-        //   }) => {
-        //     // Extract the required properties
-        //     return {
-        //       id: item.id,
-        //       title: item.title,
-        //       image: item.image,
-        //       servings: item.servings,
-        //       readyInMinutes: item.readyInMinutes,
-        //       dairyFree: item.dairyFree,
-        //       diets: item.diets,
-        //       glutenFree: item.glutenFree,
-        //       ketogenic: item.ketogenic,
-        //       vegan: item.vegan,
-        //       vegetarian: item.vegetarian,
-        //       usedIngredientCount: item.usedIngredientCount,
-        //       missedIngredientCount: item.missedIngredientCount,
-        //       missedIngredients: item.missedIngredients.map(i => i.name) // Extracting IDs
-        //     };
-        //   });
-        //   console.log(theRecipes);
-        //   setRecipes(theRecipes);
-        // }
+        //     const missedIngredientsRef = ref(db, `users/${user.uid}/missedIngredients`);
+        //     const newItemRef = push(missedIngredientsRef);
+        //     await set(newItemRef, allRecipes.missedIngredients);
+        //     setNewItem("");
+        //   } else {
+        //     Alert.alert("Please enter an item.");
+        //   }
         
+        console.log(response.data);
+        setRecipes(response.data);
+        /* ----------- use the spoonacular Apis : complexSearch ----------------*/
+        // const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch', {
+        //   params: {
+        //     apiKey: '53b84dc3adc445898ab9b81020960a4a',
+        //     includeIngredients:thisPantry,
+        //     ranking:2,
+        //     number:3
+        //   }
+        // });
+
+        // console.log(response.data);
+        // const allRecipes: Recipe[] = [];
+        // for (let index = 0; index < response.data.results.length; index++) {
+        //   const id = response.data.results[index].id;
+        //   console.log(id);
+        //   const response2 = await axios.get(`https://api.spoonacular.com/recipes/${id}/information`, {
+        //     params: {
+        //       apiKey: '53b84dc3adc445898ab9b81020960a4a'
+        //     }
+        //   });
+         
+        //   const thisRecipe:Recipe = {
+        //     id: response2.data.id,
+        //     title: response2.data.title,
+        //     image: response2.data.image,
+        //     servings: response2.data.servings,
+        //     readyInMinutes: response2.data.readyInMinutes,
+        //     extendedIngredients: response2.data.extendedIngredients.map((i: { name: string }) => i.name)
+        //   };
           
+        //   allRecipes.push(thisRecipe);
+        // }
+        // setRecipes(allRecipes);
       } catch (error) {
         setError('Error fetching recipes here');
       }
     };
-    
     fetchUserData();
     fetchRecipes();
-    
 
-   
   }, []);
 
   function handlePress(item: Recipe): void {

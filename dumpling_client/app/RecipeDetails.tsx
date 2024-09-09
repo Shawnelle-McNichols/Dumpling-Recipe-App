@@ -20,14 +20,35 @@ type Recipe = {
 }
 
 export default function RecipeDetails() {
-    const [recipe, setRecipe] = useState<Recipe | null>(null);
+
     const { recipe: recipeParam } = useLocalSearchParams();
+    const [recipe, setRecipe] = useState<Recipe | undefined>(undefined);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (recipeParam) {
             const parsedRecipe = JSON.parse(decodeURI(recipeParam as string)) as Recipe;
             setRecipe(parsedRecipe);
         }
+       
+        const fetchRecipes = async () => {
+          try {
+            /* ----------- use the spoonacular Apis ----------------*/
+            // const response = await axios.get(`https://api.spoonacular.com/recipes/${basicRecipe.id}/information`, {
+            //   params: {
+            //     apiKey: '0c5808d00bf7421f92a78a69d6e86016',
+            //   }
+            // });
+            // const recipeIds = response.data.map((item: { id: number }) => item.id);
+            // console.log(response.data);
+            // setRecipe(response.data);
+            
+          } catch (error) {
+              setError('Error fetching recipes here');
+          }
+        };
+        fetchRecipes();
+      
     }, [recipeParam]);
 
     if (!recipe) {
@@ -47,7 +68,7 @@ export default function RecipeDetails() {
                         <ThemedView style={styles.divider} />
                     </View>
                 }>
-                <Image source={recipe.imageUrl} style={style.image} />
+                <Image source={{uri:recipe.imageUrl}} style={style.image} />
                 <View >
                     <Text style={styles.subtitle}>{recipe.title}</Text>
                     <View style={styles.view}>
