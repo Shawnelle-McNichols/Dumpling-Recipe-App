@@ -10,6 +10,34 @@ import { auth, db } from "../../scripts/firebaseConfig.mjs";
 import { ref, get } from "firebase/database";
 import RecipeCard from '@/components/RecipeCard';
 
+// =========================== code for generateGroceryList ===========================//
+import { generateGroceryList } from './generateGrocery'; // Import the utility function
+// import { Recipe, PantryItem } from './types';
+import PantryItem from './grocery';
+
+const SampleComponent = ({ recipes, pantry }: { recipes: Recipe[]; pantry: PantryItem[] }) => {
+const [groceryList, setGroceryList] = useState<string[]>([]);
+useEffect(() => {
+  // Call the helper function to generate grocery list
+  const list = generateGroceryList(recipes, pantry);
+  setGroceryList(list);
+}, [recipes, pantry]);
+
+return (
+  <FlatList
+    data={groceryList}
+    keyExtractor={(item, index) => index.toString()}
+    renderItem={({ item }) => (
+      <View style={{ padding: 10 }}>
+        <Text>{item}</Text>
+      </View>
+    )}
+  />
+);
+};
+//============================ code for generateGroceryList =================================//
+
+
 //insert later
 const profImg = require("../../assets/images/profileimg.png");
 

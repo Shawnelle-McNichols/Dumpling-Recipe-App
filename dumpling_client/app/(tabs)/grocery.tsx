@@ -6,8 +6,8 @@ import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import styles from "../../styles/styles";
-import GroceryList from '../GroceryList';
+// import styles from "../../styles/styles";
+// import GroceryList from '../GroceryList';
 import { auth, db } from "../../scripts/firebaseConfig.mjs";
 import { ref, get } from "firebase/database";
 
@@ -36,7 +36,7 @@ export default function grocery() {
               key,
               name: value as string
              }));
-            console.log("Fetched pantry data:", formattedData); // Add this line for testing
+            // console.log("Fetched pantry data:", formattedData); // Add this line for testing
             // setPantry(pantryData || []);
             setPantry(formattedData);
           } else {
@@ -55,8 +55,8 @@ export default function grocery() {
 
   // Render pantry items in a FlatList
   const renderPantryItem = ({ item }: { item: PantryItem }) => (
-    <View style={styles.pantryItem}>
-      <Text style={styles.pantryItemText}>{item.name}</Text>
+    <View style={style.pantryItem}>
+      <Text style={style.pantryItemText}>{item.name}</Text>
       {/* <Text style={styles.pantryItemQuantity}>{item.quantity}</Text> */}
     </View>
   );
@@ -68,20 +68,20 @@ export default function grocery() {
         <View>
           <Image
             source={require('@/assets/images/react-logo.png')}
-            style={styles.reactLogo}
+            style={style.reactLogo}
           />
-          <ThemedView style={styles.divider}/>
+          <ThemedView style={style.divider}/>
         </View>
       }>
 
        {/* Thisis the start of edit area */}
         {/* Title */}
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title" style={styles.header} >Grocery List</ThemedText>
+      <ThemedView style={style.titleContainer}>
+        <ThemedText type="title" style={style.header} >Grocery List</ThemedText>
       </ThemedView>
 
       {/* Adding the GroceryList component to display the list */}
-      <ThemedView style={styles.container}>
+      <ThemedView style={style.container}>
         <FlatList
             data={pantry}
             keyExtractor={(item, index) => index.toString()}
@@ -101,17 +101,17 @@ const style = StyleSheet.create({
   //   borderBottomColor: "#F59D56",
   //   borderBottomWidth: .5
   // },
-  // form:{
-  //   flexDirection: 'row',
-  //   justifyContent: 'center',
-  //   alignItems:"center"
-  // },
+  form:{
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems:"center"
+  },
 
-  // container: {
-  //   flex: 1,
-  //   padding: 10,
-  //   backgroundColor: '#f0f0f0',
-  // },
+  container: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+  },
   pantryItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -126,10 +126,10 @@ const style = StyleSheet.create({
     shadowRadius: 4, // Shadow radius
     elevation: 2, // For Android shadow
   },
-  // pantryItemText: {
-  //   fontSize: 16,
-  //   color: '#333', // Text color
-  // },
+  pantryItemText: {
+    fontSize: 16,
+    color: '#333', // Text color
+  },
 
 })
 
