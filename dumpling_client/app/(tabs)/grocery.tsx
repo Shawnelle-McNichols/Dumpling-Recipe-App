@@ -1,14 +1,66 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform, View } from 'react-native';
-
+import { StyleSheet, Image, Platform, View, Text, FlatList, Alert } from 'react-native';
+import { useState, useEffect } from 'react';
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import styles from "../../styles/styles";
+import GroceryList from '../GroceryList';
+import { auth, db } from "../../scripts/firebaseConfig.mjs";
+import { ref, get } from "firebase/database";
 
-export default function MyRecipesScreen() {
+
+// Type for pantry items
+type PantryItem = {
+  name: string;
+  // quantity: string;
+};
+
+export default function grocery() {
+  const [pantry, setPantry] = useState<PantryItem[]>([]);
+
+  // Function to fetch pantry data from Firebase
+  useEffect(() => {
+    const fetchPantryData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const pantryRef = ref(db, `users/${user.uid}/pantry`);
+          const snapshot = await get(pantryRef);
+
+          if (snapshot.exists()) {
+            const pantryData = snapshot.val();
+            const formattedData = Object.entries(pantryData).map(([key,value]) => ({
+              key,
+              name: value as string
+             }));
+            console.log("Fetched pantry data:", formattedData); // Add this line for testing
+            // setPantry(pantryData || []);
+            setPantry(formattedData);
+          } else {
+            Alert.alert("No pantry data found.");
+          }
+        } catch (error) {
+          Alert.alert("Error fetching pantry data");
+        }
+      } else {
+        Alert.alert("No user signed in");
+      }
+    };
+
+    fetchPantryData();
+  }, []);
+
+  // Render pantry items in a FlatList
+  const renderPantryItem = ({ item }: { item: PantryItem }) => (
+    <View style={styles.pantryItem}>
+      <Text style={styles.pantryItemText}>{item.name}</Text>
+      {/* <Text style={styles.pantryItemQuantity}>{item.quantity}</Text> */}
+    </View>
+  );
+  
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#ffffff', dark: '#353636' }}
@@ -23,79 +75,61 @@ export default function MyRecipesScreen() {
       }>
 
        {/* Thisis the start of edit area */}
+        {/* Title */}
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+        <ThemedText type="title" style={styles.header} >Grocery List</ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library
-          to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-      {/* This is the end of the edit area */}
+
+      {/* Adding the GroceryList component to display the list */}
+      <ThemedView style={styles.container}>
+        <FlatList
+            data={pantry}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderPantryItem}
+
+          />
+      </ThemedView>
     </ParallaxScrollView>
   );
 }
+
+const style = StyleSheet.create({
+  // pantryItem: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   padding: 5,
+  //   borderBottomColor: "#F59D56",
+  //   borderBottomWidth: .5
+  // },
+  // form:{
+  //   flexDirection: 'row',
+  //   justifyContent: 'center',
+  //   alignItems:"center"
+  // },
+
+  // container: {
+  //   flex: 1,
+  //   padding: 10,
+  //   backgroundColor: '#f0f0f0',
+  // },
+  pantryItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center', // Center items vertically
+    padding: 15,
+    marginVertical: 5,
+    backgroundColor: '#ffffff', // Background color of each item
+    borderRadius: 8, // Rounded corners
+    shadowColor: '#000', // Shadow color for elevation effect
+    shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    shadowOpacity: 0.1, // Shadow opacity
+    shadowRadius: 4, // Shadow radius
+    elevation: 2, // For Android shadow
+  },
+  // pantryItemText: {
+  //   fontSize: 16,
+  //   color: '#333', // Text color
+  // },
+
+})
+

@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     mainLogo:{
         width:300,
         marginBottom:10
-    }
+    },
 
 });
 export default styles;
