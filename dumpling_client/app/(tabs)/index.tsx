@@ -182,6 +182,7 @@ const recipes: Recipe[] = [
 ];
 //End of -- To be commented out
 
+
 export default function HomeScreen() {
   const [username, setUsername] = useState<string>("");
   const [favCuisines, setFavCuisines] = useState<string[]>([]);
