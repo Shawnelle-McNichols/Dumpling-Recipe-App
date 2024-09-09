@@ -49,12 +49,11 @@ type Recipe = {
 //   missedIngredientCount: number;
 //   missedIngredients:string[];
 // };
-const recipes: Recipe = [
+const recipes: Recipe[] = [
   {
       id: 645555,
       title: "Green Tomato Salad",
       image: "https://img.spoonacular.com/recipes/645555-312x231.jpg",
-      imageType: "jpg",
       usedIngredientCount: 1,
       missedIngredientCount: 2,
       missedIngredients: [
@@ -78,7 +77,6 @@ const recipes: Recipe = [
       id: 715870,
       title: "Salsa",
       image: "https://img.spoonacular.com/recipes/715870-312x231.jpg",
-      imageType: "jpg",
       usedIngredientCount: 1,
       missedIngredientCount: 3,
       missedIngredients: [
@@ -152,21 +150,7 @@ export default function RecipesScreen() {
   const [newItem, setNewItem] = useState<string>("");
   // Fetch recipes based on ingredients
  
-  const addGroceries= async () => {
-    const user = auth.currentUser;
-    if (user) {
-      if (newItem == "") {
-        Alert.alert("Enter an item.");
-        return;
-      }
-      const pantryRef = ref(db, `users/${user.uid}/pantry`);
-      const newItemRef = push(pantryRef);
-      await set(newItemRef, newItem.trim());
-      setNewItem("");
-    } else {
-      Alert.alert("Please enter an item.");
-    }
-  }
+
   const addRecipes = async () => {
     const user = auth.currentUser;
     if (user) {
