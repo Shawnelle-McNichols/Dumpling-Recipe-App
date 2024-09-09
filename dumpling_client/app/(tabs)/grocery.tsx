@@ -7,18 +7,20 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 // import styles from "../../styles/styles";
-// import GroceryList from '../GroceryList';
 import { auth, db } from "../../scripts/firebaseConfig.mjs";
 import { ref, get } from "firebase/database";
 
+// import { PantryItem } from './pantry'; // Assuming you have PantryItem type
+
 
 // Type for pantry items
-type PantryItem = {
+export type PantryItem = {
   name: string;
   // quantity: string;
 };
 
-export default function grocery() {
+// export default function grocery() 
+export const usePantry = ():PantryItem[] => {
   const [pantry, setPantry] = useState<PantryItem[]>([]);
 
   // Function to fetch pantry data from Firebase
@@ -49,7 +51,7 @@ export default function grocery() {
         Alert.alert("No user signed in");
       }
     };
-
+    // setPantry(["bell peppers", "chicken", "onion"]); // Example items
     fetchPantryData();
   }, []);
 
@@ -61,36 +63,36 @@ export default function grocery() {
     </View>
   );
   
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#ffffff', dark: '#353636' }}
-      headerImage={
-        <View>
-          <Image
-            source={require('@/assets/images/react-logo.png')}
-            style={style.reactLogo}
-          />
-          <ThemedView style={style.divider}/>
-        </View>
-      }>
+   return pantry;
+  // return (
+  //   <ParallaxScrollView
+  //     headerBackgroundColor={{ light: '#ffffff', dark: '#353636' }}
+  //     headerImage={
+  //       <View>
+  //         <Image
+  //           source={require('@/assets/images/react-logo.png')}
+  //           style={style.reactLogo}
+  //         />
+  //         <ThemedView style={style.divider}/>
+  //       </View>
+  //     }>
 
-       {/* Thisis the start of edit area */}
-        {/* Title */}
-      <ThemedView style={style.titleContainer}>
-        <ThemedText type="title" style={style.header} >Grocery List</ThemedText>
-      </ThemedView>
+  //      {/* Thisis the start of edit area */}
+  //       {/* Title */}
+  //     <ThemedView style={style.titleContainer}>
+  //       <ThemedText type="title" style={style.header} >Grocery List</ThemedText>
+  //     </ThemedView>
 
-      {/* Adding the GroceryList component to display the list */}
-      <ThemedView style={style.container}>
-        <FlatList
-            data={pantry}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={renderPantryItem}
-
-          />
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+  //     {/* Adding the GroceryList component to display the list */}
+  //     <ThemedView style={style.container}>
+  //       <FlatList
+  //           data={pantry}
+  //           keyExtractor={(item, index) => index.toString()}
+  //           renderItem={renderPantryItem}
+  //         />
+  //     </ThemedView>
+  //   </ParallaxScrollView>
+  // );
 }
 
 const style = StyleSheet.create({

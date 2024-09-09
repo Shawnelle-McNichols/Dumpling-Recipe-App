@@ -10,39 +10,19 @@ import { auth, db } from "../../scripts/firebaseConfig.mjs";
 import { ref, get } from "firebase/database";
 import RecipeCard from '@/components/RecipeCard';
 
-// =========================== code for generateGroceryList ===========================//
-import { generateGroceryList } from './generateGrocery'; // Import the utility function
-// import { Recipe, PantryItem } from './types';
-import PantryItem from './grocery';
 
-const SampleComponent = ({ recipes, pantry }: { recipes: Recipe[]; pantry: PantryItem[] }) => {
-const [groceryList, setGroceryList] = useState<string[]>([]);
-useEffect(() => {
-  // Call the helper function to generate grocery list
-  const list = generateGroceryList(recipes, pantry);
-  setGroceryList(list);
-}, [recipes, pantry]);
+import { generateGrocery } from './generateGrocery'; // Import the utility function
+import { PantryItem, usePantry } from './grocery'; // Import the custom hook
+// import pantry from './pantry';
 
-return (
-  <FlatList
-    data={groceryList}
-    keyExtractor={(item, index) => index.toString()}
-    renderItem={({ item }) => (
-      <View style={{ padding: 10 }}>
-        <Text>{item}</Text>
-      </View>
-    )}
-  />
-);
-};
-//============================ code for generateGroceryList =================================//
+
 
 
 //insert later
 const profImg = require("../../assets/images/profileimg.png");
 
 // Basically a class for Recipe
-type Recipe = {
+export type Recipe = {
   id: number,
   title: string,
   summary: string,
@@ -53,8 +33,31 @@ type Recipe = {
   servings: number,
   readyInMinutes: number
 }
-//Fake Data Start--To be commented out
 
+// =========================== code for generateGroceryList ===========================//
+const SampleComponent = ({ recipes, pantry }: { recipes: Recipe[]; pantry: PantryItem[] }) => {
+  const [groceryList, setGroceryList] = useState<PantryItem[]>([]);
+  useEffect(() => {
+    // Call the helper function to generate grocery list
+    const list = generateGrocery(recipes, pantry);
+    setGroceryList(list);
+  }, [recipes, pantry]);
+  
+  return (
+    <FlatList
+      data={groceryList}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({ item }) => (
+        <View style={{ padding: 10 }}>
+          <Text>{item.name}</Text>
+        </View>
+      )}
+    />
+  );
+  };
+  //============================ end code for generateGroceryList =================================//
+
+//Fake Data Start--To be commented out
 const recipes: Recipe[] = [
   {
     id: 1,
@@ -216,14 +219,15 @@ export default function HomeScreen() {
   const [myDiet, setMyDiet] = useState<string[]>([]);
   const [favDishes, setFavDishes] = useState<string[]>([]);
   const [intolerances, setIntolerances] = useState<string[]>([]);
-  const [pantry,setPantry] = useState<string[]>([]);
+  // const [pantry, setPantry] = useState<PantryItem[]>([]); // Change to PantryItem[] here
 
+  const pantryData = usePantry(); // Fetch pantry data here
 
   const router = useRouter();
   //passes the selected recipe information to RecipeDetails
   const handlePress = (recipe: Recipe) => {
-    const data = encodeURIComponent(JSON.stringify(recipe));
-    router.push(`/RecipeDetails?recipe=${data}`);
+  const data = encodeURIComponent(JSON.stringify(recipe));
+  router.push(`/RecipeDetails?recipe=${data}`);
   }
 
   useEffect(() => {
@@ -242,7 +246,7 @@ export default function HomeScreen() {
             setMyDiet(data.myDiet || []);
             setFavDishes(data.favDishes || []);
             setIntolerances(data.intolerances || []);
-            setPantry(data.pantry|| []);
+            // setPantry(data.pantry|| []);
           } else {
             Alert.alert("User needs to set up their profile.");
           }
@@ -268,9 +272,7 @@ export default function HomeScreen() {
           <ThemedView style={styles.divider} />
         </View>
       }
-
-    >
-      
+    > 
       <ThemedView style={styles.titleContainer}>
         <ThemedText style={styles.header}>Welcome, {username}</ThemedText>
       </ThemedView>
@@ -286,6 +288,9 @@ export default function HomeScreen() {
         )}
       />
       </View>
+
+      <SampleComponent recipes={recipes} pantry={pantryData} /> {/* Pass pantry data here */}
+
     </ParallaxScrollView>
   );
 };
