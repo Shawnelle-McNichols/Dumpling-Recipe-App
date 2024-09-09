@@ -1,9 +1,9 @@
 import { Text, View, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import styles from "../styles/styles";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useRouter } from "expo-router";
 import { auth } from "../scripts/firebaseConfig.mjs";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 
 const logo = require("../assets/images/Dumpling.png");
 
@@ -23,6 +23,15 @@ export default function Login() {
         Alert.alert("Email or password is incorrect")
       });
   }
+
+  useEffect(() =>{
+    const unsubscribe = onAuthStateChanged(auth,(user) => {
+      if(user){
+        router.push("/(tabs)");
+      }
+    })
+    return () => unsubscribe();
+  },[]);
 
   return (
       <View style={styles.container2}>
