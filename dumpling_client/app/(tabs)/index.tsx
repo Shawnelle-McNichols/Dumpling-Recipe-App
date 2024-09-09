@@ -11,6 +11,7 @@ import styles from "../../styles/styles";
 import { Link } from '@react-navigation/native';
 const logo = require("../../assets/images/partial-react-logo.png");
 
+
 export default function HomeScreen() {
   return (
   <ParallaxScrollView
