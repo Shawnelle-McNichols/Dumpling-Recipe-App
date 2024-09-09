@@ -3,7 +3,7 @@ import { Text, View, TextInput, TouchableOpacity, Alert, ScrollView } from "reac
 import styles from "../../styles/styles";
 import { Link, useRouter } from "expo-router";
 import { auth, db } from "../../scripts/firebaseConfig.mjs";
-import { ref, set, get } from "firebase/database";
+import { ref, update, get } from "firebase/database";
 import { ThemedView } from '@/components/ThemedView';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 
@@ -45,7 +45,7 @@ export default function EditProfile() {
         const user = auth.currentUser;
         if (user) {
             try {
-                await set(ref(db, `users/${user.uid}`), {
+                await update(ref(db, `users/${user.uid}`), {
                     username,
                     favCuisines,
                     myDiet,
