@@ -38,20 +38,20 @@ export default function GroceryList({ pantryData }: GroceryListProps) {
   );
 }
 
-// const styles = StyleSheet.create({
-//   Container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     padding: 16,
-//   },
-//   header: {
-//     fontSize: 28,
-//     fontWeight: "bold",
-//     marginBottom: 16,
-//   },
-//   item: {
-//     fontSize: 20,
-//     marginVertical: 8,
-//   },
-// });
+const styles = StyleSheet.create({
+  Container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  header: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  item: {
+    fontSize: 20,
+    marginVertical: 8,
+  },
+});

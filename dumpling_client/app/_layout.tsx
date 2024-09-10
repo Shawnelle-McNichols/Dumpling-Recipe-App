@@ -1,7 +1,9 @@
+import { MyProvider } from "@/components/MyContext";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
+   <MyProvider>
     <Stack>
       <Stack.Screen 
       name="index" 
@@ -32,5 +34,6 @@ export default function RootLayout() {
         headerShown:false,
         }}/>
     </Stack>
+    </MyProvider>
   );
 }
