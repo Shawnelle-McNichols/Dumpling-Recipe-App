@@ -7,7 +7,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import styles from "../../styles/styles";
-import GroceryList from '../GroceryList';
+import GroceryList from '../../components/GroceryList';
 import { auth, db } from "../../scripts/firebaseConfig.mjs";
 import { ref, get } from "firebase/database";
 
@@ -55,8 +55,8 @@ export default function grocery() {
 
   // Render pantry items in a FlatList
   const renderPantryItem = ({ item }: { item: PantryItem }) => (
-    <View style={styles.pantryItem}>
-      <Text style={styles.pantryItemText}>{item.name}</Text>
+    <View style={style.pantryItem}>
+      <Text style={style.pantryItemText}>{item.name}</Text>
       {/* <Text style={styles.pantryItemQuantity}>{item.quantity}</Text> */}
     </View>
   );
@@ -126,10 +126,10 @@ const style = StyleSheet.create({
     shadowRadius: 4, // Shadow radius
     elevation: 2, // For Android shadow
   },
-  // pantryItemText: {
-  //   fontSize: 16,
-  //   color: '#333', // Text color
-  // },
+  pantryItemText: {
+    fontSize: 16,
+    color: '#333', // Text color
+  },
 
 })
 

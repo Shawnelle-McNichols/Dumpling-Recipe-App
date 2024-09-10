@@ -1,4 +1,5 @@
-import React, { useState, useEffect} from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
 import styles from "../../styles/styles";
 import { Link, useRouter } from "expo-router";
@@ -6,6 +7,25 @@ import { auth, db } from "../../scripts/firebaseConfig.mjs";
 import { ref, update, get } from "firebase/database";
 import { ThemedView } from '@/components/ThemedView';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
+import axios from 'axios';
+
+type dietRecipe = {
+  id:number,
+  servings:2,
+  title:string,
+  readyInMinutes:number,
+  creditsText:string,
+  Vegan:boolean,
+  Vegetarian:boolean,
+  Ketogenic:boolean,
+  GlutenFree:boolean,
+  lowFodmap:boolean,
+  dairyFree:boolean,
+
+}
+
+
+
 
 
 export default function EditProfile() {
@@ -14,6 +34,7 @@ export default function EditProfile() {
     const [myDiet, setMyDiet] = useState<string[]>([]);
     const [favDishes, setFavDishes] = useState<string[]>([]);
     const [intolerances, setIntolerances] = useState<string[]>([]);
+    const [dietRecipes, setDietRecipe] = useState<string[]>([]);
    // const [customCuisine, setCustomCuisine] = useState<string>("");
    // const [customDiet, setCustomDiet] = useState<string>("");
    // const [customDish, setCustomDish] = useState<string>("");
@@ -40,7 +61,7 @@ export default function EditProfile() {
                 setCustomItem('');
             }
         }*/
-
+       
     const handleProfileEdit = async () => {
         const user = auth.currentUser;
         if (user) {

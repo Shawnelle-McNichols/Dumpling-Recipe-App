@@ -1,9 +1,14 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import axios from 'axios';
+import { auth, db } from '@/scripts/firebaseConfig.mjs';
+import { get, ref } from 'firebase/database';
+import { Alert } from 'react-native';
+
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();

@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     container2: {
         backgroundColor: "#FDFFFC",
         flex: 1,
-        alignItems: "center",
+        alignItems: "center"
     },
     view: {
         padding:10
