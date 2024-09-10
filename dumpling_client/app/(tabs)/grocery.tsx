@@ -7,7 +7,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import styles from "../../styles/styles";
-import GroceryList from '../../components/GroceryList';
+
 import { auth, db } from "../../scripts/firebaseConfig.mjs";
 import { ref, get } from "firebase/database";
 
@@ -20,28 +20,52 @@ type PantryItem = {
 
 export default function grocery() {
   const [pantry, setPantry] = useState<PantryItem[]>([]);
-
+  const [grocery, setGrocery] = useState<PantryItem[]>([]);
   // Function to fetch pantry data from Firebase
   useEffect(() => {
     const fetchPantryData = async () => {
       const user = auth.currentUser;
       if (user) {
         try {
-          const pantryRef = ref(db, `users/${user.uid}/pantry`);
-          const snapshot = await get(pantryRef);
-
+         
+          const groceryRef = ref(db, `users/${user.uid}/groceryList`);
+          
+          const snapshot = await get(groceryRef);
           if (snapshot.exists()) {
-            const pantryData = snapshot.val();
-            const formattedData = Object.entries(pantryData).map(([key,value]) => ({
+            const groceryData = snapshot.val();
+      
+            const formattedData = Object.entries(groceryData).map(([key,value]) => ({
               key,
-              name: value as string
+              name: value as string[]
              }));
-            console.log("Fetched pantry data:", formattedData); // Add this line for testing
+            
+           
+            const list: string[] = [];
+            console.log("Fetched formattedData data:", formattedData);
+            for (let index = 0; index < formattedData.length; index++) {
+              const item = formattedData[index];
+              for (const key in item.name) {
+                if (Object.prototype.hasOwnProperty.call(item.name, key)) {
+                  const ingredients = item.name[key]; // This is an array of strings
+                  list.push(...ingredients); // Spread operator to add elements to the list
+                }
+              }
+            }
+            const set: Set<string> = new Set(list);
+            const uniqueArrayAlt: string[] = [...set];
+            console.log("Fetched set data:", uniqueArrayAlt); 
+            console.log("Fetched list data:", list); // Add this line for testing
             // setPantry(pantryData || []);
-            setPantry(formattedData);
+            const pantryItems: PantryItem[] = uniqueArrayAlt.map(name => ({
+              name
+            }));
+            setPantry(pantryItems);
+           
+
           } else {
             Alert.alert("No pantry data found.");
           }
+
         } catch (error) {
           Alert.alert("Error fetching pantry data");
         }
@@ -81,7 +105,7 @@ export default function grocery() {
       </ThemedView>
 
       {/* Adding the GroceryList component to display the list */}
-      <ThemedView style={styles.container}>
+      <ThemedView style={style.container}>
         <FlatList
             data={pantry}
             keyExtractor={(item, index) => index.toString()}
@@ -107,11 +131,12 @@ const style = StyleSheet.create({
   //   alignItems:"center"
   // },
 
-  // container: {
-  //   flex: 1,
-  //   padding: 10,
-  //   backgroundColor: '#f0f0f0',
-  // },
+  container: {
+    flexDirection: 'row',
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#ffffff',
+  },
   pantryItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',

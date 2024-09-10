@@ -47,13 +47,16 @@ type Recipe = {
 //   missedIngredients:string[];
 // };
 
-
+type RecipeInList={
+  id:number,
+  missedIngredients:string[];
+}
 type props = {
     recipe: Recipe;
 }
 
 export default function RecipeCard({ recipe }: props) {
-  const [recipeIds,setRecipeIds] = useState<number[]>([]);
+  const [recipeList,SetRecipeList] = useState<RecipeInList[]>([]);
   const [pantry,setPantry] = useState<string[]>([]);
   const [newGrocery, setNewGrocery] = useState<string[]>([]);
   const [newItem, setNewItem] = useState<string[]>();
@@ -68,7 +71,7 @@ export default function RecipeCard({ recipe }: props) {
           if (snapshot.exists()) {
             const data = snapshot.val();
             setPantry(data.pantry|| []);
-            setRecipeIds(data.recipes|| []);
+            SetRecipeList(data.recipeList|| []);
           } else {
             Alert.alert("User needs to set up their profile.");
           }
@@ -108,20 +111,17 @@ export default function RecipeCard({ recipe }: props) {
         Alert.alert("Enter an item.");
         return;
       }
-      
       const groceryRef = ref(db, `users/${user.uid}/groceryList`);
       const newItemRef = push(groceryRef);
-      const data = {
-        id:ingredients,
-      }
-      await set(newItemRef, data);
+      const recipeInList:RecipeInList = { id:recipe.id, missedIngredients: ingredients};
+      await set(newItemRef,  recipeInList);
 
       setNewItem(undefined);
     } else {
       Alert.alert("Please enter an item.");
     }
   }
-  const removeItem = async (key: number) => {
+  const removeItem = async (key: string) => {
     const user = auth.currentUser;
     if (user) {
       const itemRef = ref(db, `users/${user.uid}/groceryList/${key}`);
@@ -132,54 +132,26 @@ export default function RecipeCard({ recipe }: props) {
   }
 
 
-  var ifContain = false;
-  recipeIds.forEach(element => {
-     if(element == recipe.id){
-      ifContain = true;
-     }
-  });
+  const isInRecipeIds = recipeList.some((item: { id: number }) => item.id === recipe.id);
 
-  if(ifContain){
+  
     return (
       <View style={style.container}>
-          <Image style={style.image} source={{uri: recipe.image}} />
-          <View style={style.textContainer}>
-              <Text style={style.subtitle}>{recipe.title}</Text>
-              {/* <Text style={style.text}>Serves: {recipe.readyInMinutes}</Text> */}
-              <Text style={style.text}>Missed Ingredients: {Object.values(ingredients).join(', ')}</Text>
-          </View>
-          <View style={styles.form_group}>
-            
-          <TouchableOpacity onPress={() => removeItem(recipe.id)}>
-              <Ionicons name="trash-outline" size={24} color="red" />
-            </TouchableOpacity>
-          </View>
+      <Image style={style.image} source={{ uri: recipe.image }} />
+      <View style={style.textContainer}>
+        <Text style={style.subtitle}>{recipe.title}</Text>
+        <Text style={style.text}>Missed Ingredients: {ingredients.join(', ')}</Text>
       </View>
+    </View>
   );
-  }else{
-    return (
-      <View style={style.container}>
-          <Image style={style.image} source={{uri: recipe.image}} />
-          <View style={style.textContainer}>
-              <Text style={style.subtitle}>{recipe.title}</Text>
-              {/* <Text style={style.text}>Serves: {recipe.readyInMinutes}</Text> */}
-              <Text style={style.text}>Missed Ingredients: {Object.values(ingredients).join(', ')}</Text>
-          </View>
-          <View style={styles.form_group}>
-            <TouchableOpacity style={styles.btn_main_sm} onPress={addItem}>
-           <Text style={styles.whitefont}>+</Text>
-         </TouchableOpacity>
-          </View>
-      </View>
-  );
-  }
+  
    
 };
 
 const style = StyleSheet.create({
   container: {
     padding:10,
-    width:'100%',
+    width:350,
     height:'100%',
     flexDirection: 'row', 
     alignItems: 'center', 

@@ -234,26 +234,26 @@ export default function HomeScreen() {
 
     const fetchRandomRecipes = async () => {
       try {
-        /* ----------- use the spoonacular Apis ----------------*/
-        const response = await axios.get('https://api.spoonacular.com/recipes/random', {
-          params: {
-            apiKey: 'e8099cbd3a264bd288bfa39b349bd79a',
-            number:4
-          }
-        });
+      //   /* ----------- use the spoonacular Apis ----------------*/
+      //   const response = await axios.get('https://api.spoonacular.com/recipes/random', {
+      //     params: {
+      //       apiKey: 'e8099cbd3a264bd288bfa39b349bd79a',
+      //       number:4
+      //     }
+      //   });
         
-        const allRecipes: Recipe[]=response.data.map((item: any) => ({
-        id: item.id,
-        title: item.title,
-        image: item.image,
-        servings: item.servings,
-        readyInMinutes: item.readyInMinutes,
-        extendedIngredients: item.extendedIngredients.map((i: { name: string }) => i.name)
-        }));
+      //   const allRecipes: Recipe[]=response.data.map((item: any) => ({
+      //   id: item.id,
+      //   title: item.title,
+      //   image: item.image,
+      //   servings: item.servings,
+      //   readyInMinutes: item.readyInMinutes,
+      //   extendedIngredients: item.extendedIngredients.map((i: { name: string }) => i.name)
+      //   }));
 
        
       
-       setRecipes(allRecipes);
+      //  setRecipes(allRecipes);
       } catch (error) {
         setError('Error fetching recipes here');
       }
@@ -325,12 +325,17 @@ export default function HomeScreen() {
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#', dark: '#353636' }}
       headerImage={
-        <View style={styles.view}>
+        <View style={styles.container}>
+          <ThemedView style={styles.divider} />
           <Image
             source={require('@/assets/images/react-logo.png')}
             style={styles.reactLogo}
           />
-          <ThemedView style={styles.divider} />
+           <TouchableOpacity style={styles.reactButton} >
+            <Text style={styles.whitefont}>+</Text>
+          </TouchableOpacity>
+          <ThemedView style={styles.divider2} />
+          
         </View>
       }
     >
