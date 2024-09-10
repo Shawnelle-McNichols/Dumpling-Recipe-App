@@ -4,7 +4,7 @@ import { ThemedView } from '@/components/ThemedView';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { usePantry } from './grocery'; // Ensure correct path
 // import styles from "../styles/styles";
-import SampleComponent from './index';
+ import SampleComponent from './index';
 import recipes from './recipes';
 
 // Type for pantry items

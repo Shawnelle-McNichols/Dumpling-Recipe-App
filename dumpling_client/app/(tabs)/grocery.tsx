@@ -9,7 +9,6 @@ import { ThemedView } from '@/components/ThemedView';
 // import styles from "../../styles/styles";
 import { auth, db } from "../../scripts/firebaseConfig.mjs";
 import { ref, get } from "firebase/database";
-
 // import { PantryItem } from './pantry'; // Assuming you have PantryItem type
 
 

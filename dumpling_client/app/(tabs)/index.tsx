@@ -289,7 +289,7 @@ export default function HomeScreen() {
       />
       </View>
 
-      <SampleComponent recipes={recipes} pantry={pantryData} /> {/* Pass pantry data here */}
+      {/* <SampleComponent recipes={recipes} pantry={pantryData} /> Pass pantry data here */}
 
     </ParallaxScrollView>
   );
