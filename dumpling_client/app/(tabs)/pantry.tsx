@@ -67,13 +67,18 @@ export default function PantryScreen() {
       <ParallaxScrollView
         headerBackgroundColor={{ light: '#ffffff', dark: '#353636' }}
         headerImage={
-          <View>
-            <Image
-              source={require('@/assets/images/react-logo.png')}
-              style={styles.reactLogo}
-            />
-            <ThemedView style={styles.divider} />
-          </View>
+          <View style={styles.container}>
+          <ThemedView style={styles.divider} />
+          <Image
+            source={require('@/assets/images/react-logo.png')}
+            style={styles.reactLogo}
+          />
+           <TouchableOpacity style={styles.reactButton} >
+            <Text style={styles.whitefont}>+</Text>
+          </TouchableOpacity>
+          <ThemedView style={styles.divider2} />
+          
+        </View>
         }>
         <View >
           <ThemedView style={styles.titleContainer}>
