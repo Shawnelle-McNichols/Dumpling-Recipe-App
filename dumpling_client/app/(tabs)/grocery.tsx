@@ -7,7 +7,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import styles from "../../styles/styles";
-import GroceryList from '../GroceryList';
+import GroceryList from '../../components/GroceryList';
 import { auth, db } from "../../scripts/firebaseConfig.mjs";
 import { ref, get } from "firebase/database";
 

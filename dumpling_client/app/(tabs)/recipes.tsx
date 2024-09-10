@@ -11,6 +11,8 @@ import { get, push, ref, set } from 'firebase/database';
 import RecipeCard from '@/components/RecipeCard';
 import RecipeCardSmall from '@/components/RecipeCardSmall';
 import MyContext from '@/components/MyContext';
+import { useRouter } from 'expo-router';
+
 
 // Define the Recipe type
 type Ingredient = {
@@ -20,7 +22,10 @@ type Ingredient = {
   amount: number;
   unit: string;
 };
-
+type RecipeData ={
+  recipeDetail:RecipeDetail;
+  recipe:Recipe;
+}
 type Recipe = {
     id: number;
     title: string;
@@ -29,7 +34,16 @@ type Recipe = {
     missedIngredientCount: number;
     missedIngredients: Ingredient[];
   };
-  
+  type RecipeDetail = {
+    id: number;
+    title: string;
+    summary: string;
+    image: string;
+    servings: number;
+    readyInMinutes: number;
+    extendedIngredients: { name: string; original: string ;image:string}[];
+    analyzedInstructions: { number: number; step: string }[];
+  }
 
 // type Recipe = {
 //   id: number;
@@ -49,91 +63,91 @@ type Recipe = {
 //   missedIngredientCount: number;
 //   missedIngredients:string[];
 // };
-const recipes: Recipe[] = [
-  {
-      id: 645555,
-      title: "Green Tomato Salad",
-      image: "https://img.spoonacular.com/recipes/645555-312x231.jpg",
-      usedIngredientCount: 1,
-      missedIngredientCount: 2,
-      missedIngredients: [
-          {
-              id: 10211111,
-              amount: 1,
-              unit: "teaspoon",
-              name: "sumac powder",
-              image: "https://img.spoonacular.com/ingredients_100x100/dried-sumac.jpg"
-          },
-          {
-              id: 99226,
-              amount: 1,
-              unit: "handful",
-              name: "sage and mint leaves",
-              image: "https://img.spoonacular.com/ingredients_100x100/fresh-sage.png"
-          }
-      ]
-  },
-  {
-      id: 715870,
-      title: "Salsa",
-      image: "https://img.spoonacular.com/recipes/715870-312x231.jpg",
-      usedIngredientCount: 1,
-      missedIngredientCount: 3,
-      missedIngredients: [
-          {
-              id: 15012,
-              amount: 1,
-              unit: "serving",
-              name: "texas cowboy caviar",
-              image: "https://img.spoonacular.com/ingredients_100x100/caviar.png"
-          },
-          {
-              id: 6164,
-              amount: 1,
-              unit: "serving",
-              name: "cranberry avocado salsa",
-              image: "https://img.spoonacular.com/ingredients_100x100/salsa.png"
-          },
-          {
-              id: 27028,
-              amount: 1,
-              unit: "serving",
-              name: "roasted tomatillo salsa",
-              image: "https://img.spoonacular.com/ingredients_100x100/salsa-verde.png"
-          }
-      ]
-  },
-  {
-      id: 1674265,
-      title: "Easy Tomato Soup",
-      image: "https://img.spoonacular.com/recipes/1674265-312x231.jpg",
-      usedIngredientCount: 1,
-      missedIngredientCount: 3,
-      missedIngredients: [
-          {
-              id: 1001,
-              amount: 4,
-              unit: "tablespoons",
-              name: "butter",
-              image: "https://img.spoonacular.com/ingredients_100x100/butter-sliced.jpg"
-          },
-          {
-              id: 11282,
-              amount: 1,
-              unit: "",
-              name: "onion",
-              image: "https://img.spoonacular.com/ingredients_100x100/brown-onion.png"
-          },
-          {
-              id: 6615,
-              amount: 1.5,
-              unit: "cups",                 
-              name: "vegetable broth",
-              image: "https://img.spoonacular.com/ingredients_100x100/chicken-broth.png"
-          }
-      ]
-  }
-]
+// const recipes: Recipe[] = [
+//   {
+//       id: 645555,
+//       title: "Green Tomato Salad",
+//       image: "https://img.spoonacular.com/recipes/645555-312x231.jpg",
+//       usedIngredientCount: 1,
+//       missedIngredientCount: 2,
+//       missedIngredients: [
+//           {
+//               id: 10211111,
+//               amount: 1,
+//               unit: "teaspoon",
+//               name: "sumac powder",
+//               image: "https://img.spoonacular.com/ingredients_100x100/dried-sumac.jpg"
+//           },
+//           {
+//               id: 99226,
+//               amount: 1,
+//               unit: "handful",
+//               name: "sage and mint leaves",
+//               image: "https://img.spoonacular.com/ingredients_100x100/fresh-sage.png"
+//           }
+//       ]
+//   },
+//   {
+//       id: 715870,
+//       title: "Salsa",
+//       image: "https://img.spoonacular.com/recipes/715870-312x231.jpg",
+//       usedIngredientCount: 1,
+//       missedIngredientCount: 3,
+//       missedIngredients: [
+//           {
+//               id: 15012,
+//               amount: 1,
+//               unit: "serving",
+//               name: "texas cowboy caviar",
+//               image: "https://img.spoonacular.com/ingredients_100x100/caviar.png"
+//           },
+//           {
+//               id: 6164,
+//               amount: 1,
+//               unit: "serving",
+//               name: "cranberry avocado salsa",
+//               image: "https://img.spoonacular.com/ingredients_100x100/salsa.png"
+//           },
+//           {
+//               id: 27028,
+//               amount: 1,
+//               unit: "serving",
+//               name: "roasted tomatillo salsa",
+//               image: "https://img.spoonacular.com/ingredients_100x100/salsa-verde.png"
+//           }
+//       ]
+//   },
+//   {
+//       id: 1674265,
+//       title: "Easy Tomato Soup",
+//       image: "https://img.spoonacular.com/recipes/1674265-312x231.jpg",
+//       usedIngredientCount: 1,
+//       missedIngredientCount: 3,
+//       missedIngredients: [
+//           {
+//               id: 1001,
+//               amount: 4,
+//               unit: "tablespoons",
+//               name: "butter",
+//               image: "https://img.spoonacular.com/ingredients_100x100/butter-sliced.jpg"
+//           },
+//           {
+//               id: 11282,
+//               amount: 1,
+//               unit: "",
+//               name: "onion",
+//               image: "https://img.spoonacular.com/ingredients_100x100/brown-onion.png"
+//           },
+//           {
+//               id: 6615,
+//               amount: 1.5,
+//               unit: "cups",                 
+//               name: "vegetable broth",
+//               image: "https://img.spoonacular.com/ingredients_100x100/chicken-broth.png"
+//           }
+//       ]
+//   }
+// ]
 
 
 // Example Component to fetch and display recipes
@@ -144,28 +158,31 @@ export default function RecipesScreen() {
   const [favDishes, setFavDishes] = useState<string[]>([]);
   const [intolerances, setIntolerances] = useState<string[]>([]);
   const [pantry,setPantry] = useState<string[]>([]);
+  const [recipeDetails, setRecipeDetails] = useState<RecipeDetail[]>([]);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [recipeData, setRecipeData] = useState<RecipeData[] >([]);
   const [error, setError] = useState<string | null>(null);
   const context = useContext(MyContext);
   const [newItem, setNewItem] = useState<string>("");
   // Fetch recipes based on ingredients
  
 
-  const addRecipes = async () => {
-    const user = auth.currentUser;
-    if (user) {
-      if (newItem == "") {
-        Alert.alert("Enter an item.");
-        return;
-      }
-      const pantryRef = ref(db, `users/${user.uid}/pantry`);
-      const newItemRef = push(pantryRef);
-      await set(newItemRef, newItem.trim());
-      setNewItem("");
-    } else {
-      Alert.alert("Please enter an item.");
-    }
-  }
+  // const addRecipes = async () => {
+  //   const user = auth.currentUser;
+  //   if (user) {
+  //     if (newItem == "") {
+  //       Alert.alert("Enter an item.");
+  //       return;
+  //     }
+  //     const pantryRef = ref(db, `users/${user.uid}/pantry`);
+  //     const newItemRef = push(pantryRef);
+  //     await set(newItemRef, newItem.trim());
+  //     setNewItem("");
+  //   } else {
+  //     Alert.alert("Please enter an item.");
+  //   }
+  // }
+
   useEffect(() => {
     const fetchUserData = async () => {
       const user = auth.currentUser;
@@ -198,10 +215,6 @@ export default function RecipesScreen() {
     const fetchRecipes = async () => {
       try {
         const thisPantry: String = Object.values(pantry).join(','); 
-        const thisIntolerances: String = Object.values(intolerances).join(',');
-        const thisDiet: String = Object.values(myDiet).join(',');
-        console.log("get thisIntolerances: here" + thisIntolerances);
-        console.log("get thisDiet: here" + thisDiet);
         console.log("get pantry:" + thisPantry);
 
         /* ----------- use the spoonacular Apis : findByIngredients ----------------*/
@@ -213,7 +226,8 @@ export default function RecipesScreen() {
             number:3
           }
         });
-        console.log(response.data)
+        console.log(response.data);
+        setRecipes(response.data);
         const allRecipes = response.data.results.map((item: any) => {
           return {
             id: item.id,
@@ -231,55 +245,80 @@ export default function RecipesScreen() {
           };
         });
        
-        //   const user = auth.currentUser;
-        //   if (user) {
-        //     if (newItem == "") {
-        //       Alert.alert("Enter an item.");
-        //       return;
-        //     }
-        //     const missedIngredientsRef = ref(db, `users/${user.uid}/missedIngredients`);
-        //     const newItemRef = push(missedIngredientsRef);
-        //     await set(newItemRef, allRecipes.missedIngredients);
-        //     setNewItem("");
-        //   } else {
-        //     Alert.alert("Please enter an item.");
-        //   }
-        
+
         console.log(response.data);
         setRecipes(response.data);
-        /* ----------- use the spoonacular Apis : complexSearch ----------------*/
+        // /* ----------- use the spoonacular Apis : complexSearch ----------------*/
         // const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch', {
         //   params: {
-        //     apiKey: '53b84dc3adc445898ab9b81020960a4a',
+        //     apiKey: 'e8099cbd3a264bd288bfa39b349bd79a',
         //     includeIngredients:thisPantry,
-        //     ranking:2,
+        //     ranking:1,
         //     number:3
         //   }
         // });
 
-        // console.log(response.data);
         // const allRecipes: Recipe[] = [];
+        // const allRecipesDetail: RecipeDetail[] = [];
+        // const allRecipesData: RecipeData[] = [];
+       
         // for (let index = 0; index < response.data.results.length; index++) {
+ 
         //   const id = response.data.results[index].id;
-        //   console.log(id);
         //   const response2 = await axios.get(`https://api.spoonacular.com/recipes/${id}/information`, {
         //     params: {
-        //       apiKey: '53b84dc3adc445898ab9b81020960a4a'
+        //       apiKey: '53b84dc3adc445898ab9b81020960a4a'// 0c5808d00bf7421f92a78a69d6e86016
         //     }
         //   });
          
-        //   const thisRecipe:Recipe = {
+        //   const thisRecipe: Recipe= {
+        //     id: response2.data.id,
+        //     title: response2.data.title,
+        //     image: response2.data.image,
+        //     usedIngredientCount: response.data.results[index].usedIngredientCount,
+        //     missedIngredientCount:  response.data.results[index].missedIngredientCount,
+        //     missedIngredients:  response.data.results[index].missedIngredients.map((ingredient: any) => ({
+        //       id: ingredient.id,
+        //       name: ingredient.name,
+        //       image: ingredient.image,
+        //       amount: ingredient.amount,
+        //       unit: ingredient.unitShort
+        //     }))
+           
+        //   }
+        //   allRecipes.push(thisRecipe);
+
+        //   const thisRecipeDetail:RecipeDetail= {
         //     id: response2.data.id,
         //     title: response2.data.title,
         //     image: response2.data.image,
         //     servings: response2.data.servings,
         //     readyInMinutes: response2.data.readyInMinutes,
-        //     extendedIngredients: response2.data.extendedIngredients.map((i: { name: string }) => i.name)
+        //     summary: response2.data.summary,
+        //     extendedIngredients: response2.data.extendedIngredients.map((ingredient: any) => ({
+        //         name: ingredient.name,
+        //         original: ingredient.original,
+        //         image: ingredient.image
+        //     })),
+        //     analyzedInstructions: response2.data.analyzedInstructions.map((instruction: any) => ({
+        //         number: instruction.number,
+        //         step: instruction.step
+        //     }))
+        //   }
+        //   allRecipesDetail.push(thisRecipeDetail);
+
+        //   const recipeData: RecipeData = {
+        //     recipe: thisRecipe,
+        //     recipeDetail: thisRecipeDetail
         //   };
           
-        //   allRecipes.push(thisRecipe);
+        //   allRecipesData.push(recipeData);
         // }
+        
         // setRecipes(allRecipes);
+        // setRecipeDetails(allRecipesDetail);
+        // setRecipeData(allRecipesData);
+
       } catch (error) {
         setError('Error fetching recipes here');
       }
@@ -289,10 +328,15 @@ export default function RecipesScreen() {
 
   }, []);
 
-  function handlePress(item: Recipe): void {
-    throw new Error('Function not implemented.');
+  // function handlePress(item: Recipe): void {
+  //   throw new Error('Function not implemented.');
+  // }
+  const router = useRouter();
+  //passes the selected recipe information to RecipeDetails
+  const handlePress = (recipe: RecipeDetail) => {
+    const data = encodeURIComponent(JSON.stringify(recipe));
+    router.push(`../../components/RecipeDetails?recipe=${data}`);
   }
-
   return (
     <ParallaxScrollView
     headerBackgroundColor={{ light: '#', dark: '#353636' }}
@@ -315,16 +359,28 @@ export default function RecipesScreen() {
     <View style={styles.container2}>
 
       {error && <Text>{error}</Text>}
-      <FlatList
-        data={recipes}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handlePress(item)} >
-            <RecipeCardSmall recipe={item} />
-          </TouchableOpacity>
-        )}
-      />
+      {/* <FlatList
+          data={recipeData}
+          keyExtractor={(item) => item.recipe.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handlePress(item.recipeDetail)} >
+              <RecipeCardSmall recipe={item.recipe} />
+            </TouchableOpacity>
+            
+          )}
+        /> */}
+        <FlatList
+          data={recipes}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity >
+              <RecipeCardSmall recipe={item} />
 
+            </TouchableOpacity>
+            
+          )}  />
+
+       
     </View>
   </ParallaxScrollView>
    

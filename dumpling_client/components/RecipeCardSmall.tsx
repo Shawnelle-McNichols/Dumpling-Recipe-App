@@ -4,8 +4,10 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import styles from "../styles/styles";
-import { get, push, ref, set } from 'firebase/database';
+import { get, push, ref, remove, set } from 'firebase/database';
 import { auth, db } from '@/scripts/firebaseConfig.mjs';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 type Ingredient = {
   id: number;
   name: string;
@@ -15,13 +17,13 @@ type Ingredient = {
 };
 
 type Recipe = {
-    id: number;
-    title: string;
-    image: string;
-    usedIngredientCount: number;
-    missedIngredientCount: number;
-    missedIngredients: Ingredient[];
-  };
+  id: number;
+  title: string;
+  image: string;
+  usedIngredientCount: number;
+  missedIngredientCount: number;
+  missedIngredients: Ingredient[];
+};
 // type Recipe = {
 //   id: number;
 //   title: string;
@@ -51,6 +53,7 @@ type props = {
 }
 
 export default function RecipeCard({ recipe }: props) {
+  const [recipeIds,setRecipeIds] = useState<number[]>([]);
   const [pantry,setPantry] = useState<string[]>([]);
   const [newGrocery, setNewGrocery] = useState<string[]>([]);
   const [newItem, setNewItem] = useState<string[]>();
@@ -65,7 +68,7 @@ export default function RecipeCard({ recipe }: props) {
           if (snapshot.exists()) {
             const data = snapshot.val();
             setPantry(data.pantry|| []);
-            
+            setRecipeIds(data.recipes|| []);
           } else {
             Alert.alert("User needs to set up their profile.");
           }
@@ -96,41 +99,81 @@ export default function RecipeCard({ recipe }: props) {
   //     Alert.alert("Please enter an item.");
   //   }
   // }
+  const ingredients = recipe.missedIngredients.map((item: { name: string }) => item.name);
 
-  // const addItem= async () => {
-  //   const user = auth.currentUser;
-  //   if (user) {
-  //     if (newItem == null) {
-  //       Alert.alert("Enter an item.");
-  //       return;
-  //     }
-  //     const pantryRef = ref(db, `users/${user.uid}/pantry`);
-  //     const newItemRef = push(pantryRef);
-  //     await set(newItemRef, newItem.trim());
-  //     setNewItem("");
-  //   } else {
-  //     Alert.alert("Please enter an item.");
-  //   }
-  // }
+  const addItem= async () => {
+    const user = auth.currentUser;
+    if (user) {
+      if (newItem == null) {
+        Alert.alert("Enter an item.");
+        return;
+      }
+      
+      const groceryRef = ref(db, `users/${user.uid}/groceryList`);
+      const newItemRef = push(groceryRef);
+      const data = {
+        id:ingredients,
+      }
+      await set(newItemRef, data);
 
+      setNewItem(undefined);
+    } else {
+      Alert.alert("Please enter an item.");
+    }
+  }
+  const removeItem = async (key: number) => {
+    const user = auth.currentUser;
+    if (user) {
+      const itemRef = ref(db, `users/${user.uid}/groceryList/${key}`);
+      await remove(itemRef);
+    } else {
+      Alert.alert("You need to log in to change this information.")
+    }
+  }
+
+
+  var ifContain = false;
+  recipeIds.forEach(element => {
+     if(element == recipe.id){
+      ifContain = true;
+     }
+  });
+
+  if(ifContain){
     return (
-        <View style={style.container}>
-            <Image style={style.image} source={{uri: recipe.image}} />
-            <View style={style.textContainer}>
-                <Text style={style.subtitle}>{recipe.title}</Text>
-                {/* <Text style={style.text}>Serves: {recipe.readyInMinutes}</Text> */}
-                <Text style={style.text}>Missed Ingredients: {Object.values(recipe.missedIngredients).join(', ')}</Text>
-            </View>
-            {/* <View style={styles.form_group}>
-              <ThemedText style={styles.blacktext}>Add Pantry Item</ThemedText>
-              <TextInput
-                style={style.input}
-                value={newItem}
-                onChangeText={setNewItem}
-                autoCapitalize="none" />
-            </View> */}
-        </View>
-    );
+      <View style={style.container}>
+          <Image style={style.image} source={{uri: recipe.image}} />
+          <View style={style.textContainer}>
+              <Text style={style.subtitle}>{recipe.title}</Text>
+              {/* <Text style={style.text}>Serves: {recipe.readyInMinutes}</Text> */}
+              <Text style={style.text}>Missed Ingredients: {Object.values(ingredients).join(', ')}</Text>
+          </View>
+          <View style={styles.form_group}>
+            
+          <TouchableOpacity onPress={() => removeItem(recipe.id)}>
+              <Ionicons name="trash-outline" size={24} color="red" />
+            </TouchableOpacity>
+          </View>
+      </View>
+  );
+  }else{
+    return (
+      <View style={style.container}>
+          <Image style={style.image} source={{uri: recipe.image}} />
+          <View style={style.textContainer}>
+              <Text style={style.subtitle}>{recipe.title}</Text>
+              {/* <Text style={style.text}>Serves: {recipe.readyInMinutes}</Text> */}
+              <Text style={style.text}>Missed Ingredients: {Object.values(ingredients).join(', ')}</Text>
+          </View>
+          <View style={styles.form_group}>
+            <TouchableOpacity style={styles.btn_main_sm} onPress={addItem}>
+           <Text style={styles.whitefont}>+</Text>
+         </TouchableOpacity>
+          </View>
+      </View>
+  );
+  }
+   
 };
 
 const style = StyleSheet.create({

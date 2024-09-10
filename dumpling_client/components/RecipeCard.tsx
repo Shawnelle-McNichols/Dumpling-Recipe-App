@@ -7,19 +7,21 @@ import axios from 'axios';
 import { LightSpeedOutLeft } from 'react-native-reanimated';
 
 type Recipe = {
-  id: number;
-  title: string;
-  image: string;
-  servings:number;
-  readyInMinutes:number;
-  extendedIngredients:string[];
+  id: number,
+  title: string,
+  summary: string,
+  image: string,
+  servings: number,
+  readyInMinutes: number,
+  extendedIngredients: { name: string; original: string ;image:string}[],
+  analyzedInstructions: { number: number; step: string }[]
 }
 type props = {
   recipe: Recipe,
 }
-const handlePress = (recipe: Recipe) => {
+const handlePress = (recipe: number) => {
   const data = encodeURIComponent(JSON.stringify(recipe));
-  router.push(`/RecipeDetails?recipe=${data}`);
+  router.push(`../../components/RecipeDetails?recipe=${data}`);
 }
 
 export default function RecipeCard({ recipe }: props) {

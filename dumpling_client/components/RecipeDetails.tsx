@@ -6,50 +6,36 @@ import { ThemedView } from '@/components/ThemedView';
 import styles from "../styles/styles";
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native-gesture-handler';
+import axios from 'axios';
 
 type Recipe = {
-    id: number,
-    title: string,
-    summary: string,
-    ingredients: { name: string; original: string }[],
-    instructions: { number: number; step: string }[],
-    imageUrl: string,
-    author: string,
-    servings: number,
-    readyInMinutes: number
+  id: number,
+  title: string,
+  summary: string,
+  image: string,
+  servings: number,
+  readyInMinutes: number,
+  extendedIngredients: { name: string; original: string ;image:string}[],
+  analyzedInstructions: { number: number; step: string }[]
 }
 
+
 export default function RecipeDetails() {
-
-    const { recipe: recipeParam } = useLocalSearchParams();
-    const [recipe, setRecipe] = useState<Recipe | undefined>(undefined);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (recipeParam) {
-            const parsedRecipe = JSON.parse(decodeURI(recipeParam as string)) as Recipe;
-            setRecipe(parsedRecipe);
-        }
-       
-        const fetchRecipes = async () => {
+  const router = useRouter();
+  const { recipe: recipeParam } = useLocalSearchParams();
+  const [recipe, setRecipe] = useState<Recipe | undefined>(undefined);
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+      if (recipeParam) {
           try {
-            /* ----------- use the spoonacular Apis ----------------*/
-            // const response = await axios.get(`https://api.spoonacular.com/recipes/${basicRecipe.id}/information`, {
-            //   params: {
-            //     apiKey: '0c5808d00bf7421f92a78a69d6e86016',
-            //   }
-            // });
-            // const recipeIds = response.data.map((item: { id: number }) => item.id);
-            // console.log(response.data);
-            // setRecipe(response.data);
-            
-          } catch (error) {
-              setError('Error fetching recipes here');
+              const parsedRecipe: Recipe | undefined = JSON.parse(decodeURIComponent(recipeParam as string));
+              setRecipe(parsedRecipe);
+          } catch (e) {
+              setError("Failed to parse recipe data.");
           }
-        };
-        fetchRecipes();
-      
-    }, [recipeParam]);
+      }
+  }, [recipeParam]);
 
     if (!recipe) {
         return <Text>No recipe selected</Text>;
@@ -68,17 +54,16 @@ export default function RecipeDetails() {
                         <ThemedView style={styles.divider} />
                     </View>
                 }>
-                <Image source={{uri:recipe.imageUrl}} style={style.image} />
+                <Image source={{uri:recipe.image}} style={style.image} />
                 <View >
                     <Text style={styles.subtitle}>{recipe.title}</Text>
                     <View style={styles.view}>
                         <Text style={styles.blacktext}>{recipe.summary}</Text>
-                        <Text style={styles.blacktext}>by {recipe.author}</Text>
                         <Text style={styles.blacktext}>Serves: {recipe.servings}</Text>
                         <Text style={styles.blacktext}>Ready in: {recipe.readyInMinutes}</Text>
                         <View>
                             <Text style={styles.blacktextbold}>Ingredients</Text>
-                            {recipe.ingredients.map((ingredient, index) => (
+                            {recipe.extendedIngredients.map((ingredient, index) => (
                                 <View key={index}>
                                     <Text style={styles.blacktext}>{ingredient.original}</Text>
                                 </View>
@@ -87,7 +72,7 @@ export default function RecipeDetails() {
                         </View>
                         <View>
                             <Text style={styles.blacktextbold}>Instructions</Text>
-                            {recipe.instructions.map((instructions, index) => (
+                            {recipe.analyzedInstructions.map((instructions, index) => (
                                 <View key={index}>
                                     <Text style={styles.blacktext}>Step: {instructions.number}</Text>
                                     <Text style={styles.blacktext}>{instructions.step}</Text>

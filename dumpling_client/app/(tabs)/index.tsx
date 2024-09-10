@@ -15,14 +15,18 @@ import axios from 'axios';
 const profImg = require("../../assets/images/profileimg.png");
 
 // Basically a class for Recipe
+
 type Recipe = {
-    id: number;
-    title: string;
-    image: string;
-    servings:number;
-    readyInMinutes:number;
-    extendedIngredients:string[];
+  id: number,
+  title: string,
+  summary: string,
+  image: string,
+  servings: number,
+  readyInMinutes: number,
+  extendedIngredients: { name: string; original: string ;image:string}[],
+  analyzedInstructions: { number: number; step: string }[]
 }
+
 //Fake Data Start--To be commented out
 
 // const recipes: Recipe[] = [
@@ -195,7 +199,8 @@ export default function HomeScreen() {
   //passes the selected recipe information to RecipeDetails
   const handlePress = (recipe: Recipe) => {
     const data = encodeURIComponent(JSON.stringify(recipe));
-    router.push(`/RecipeDetails?recipe=${data}`);
+    router.push(`../../components/RecipeDetails?recipe=${data}`);
+    // router.push(`../../components/RecipeDetails?recipe=${data}`);
   }
 
   useEffect(() => {
@@ -226,6 +231,7 @@ export default function HomeScreen() {
         Alert.alert("No user signed in");
       }
     };
+
     const fetchRandomRecipes = async () => {
       try {
         /* ----------- use the spoonacular Apis ----------------*/
@@ -235,14 +241,18 @@ export default function HomeScreen() {
             number:4
           }
         });
+        
         const allRecipes: Recipe[]=response.data.map((item: any) => ({
-          id: item.id,
-          title: item.title,
-          image: item.image,
-          servings: item.servings,
-          readyInMinutes: item.readyInMinutes,
-          extendedIngredients: item.extendedIngredients.map((i: { name: string }) => i.name)
+        id: item.id,
+        title: item.title,
+        image: item.image,
+        servings: item.servings,
+        readyInMinutes: item.readyInMinutes,
+        extendedIngredients: item.extendedIngredients.map((i: { name: string }) => i.name)
         }));
+
+       
+      
        setRecipes(allRecipes);
       } catch (error) {
         setError('Error fetching recipes here');
@@ -262,7 +272,7 @@ export default function HomeScreen() {
             number:4
           }
         });
-        
+
         const allRecipes: Recipe[] = [];
         for (let index = 0; index < response.data.results.length; index++) {
           const id = response.data.results[index].id;
@@ -271,16 +281,27 @@ export default function HomeScreen() {
               apiKey: '53b84dc3adc445898ab9b81020960a4a'// 0c5808d00bf7421f92a78a69d6e86016
             }
           });
-          const thisRecipe:Recipe = {
+          console.log(response2.data);
+         
+          const thisRecipe:Recipe= {
             id: response2.data.id,
             title: response2.data.title,
             image: response2.data.image,
             servings: response2.data.servings,
             readyInMinutes: response2.data.readyInMinutes,
-            extendedIngredients: response2.data.extendedIngredients.map((i: { name: string }) => i.name)
-          };
-          
+            summary: response2.data.summary,
+            extendedIngredients: response2.data.extendedIngredients.map((ingredient: any) => ({
+                name: ingredient.name,
+                original: ingredient.original,
+                image: ingredient.image
+            })),
+            analyzedInstructions: response2.data.analyzedInstructions.map((instruction: any) => ({
+                number: instruction.number,
+                step: instruction.step
+            }))
+        }
           allRecipes.push(thisRecipe);
+         
         }
      
        setRecipes(allRecipes);
