@@ -1,9 +1,10 @@
+
 import React, { useEffect, useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
 import styles from "../../styles/styles";
 import { Link, useRouter } from "expo-router";
 import { auth, db } from "../../scripts/firebaseConfig.mjs";
-import { ref, set } from "firebase/database";
+import { ref, update, get } from "firebase/database";
 import { ThemedView } from '@/components/ThemedView';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import axios from 'axios';
@@ -65,7 +66,7 @@ export default function EditProfile() {
         const user = auth.currentUser;
         if (user) {
             try {
-                await set(ref(db, `users/${user.uid}`), {
+                await update(ref(db, `users/${user.uid}`), {
                     username,
                     favCuisines,
                     myDiet,
@@ -73,7 +74,7 @@ export default function EditProfile() {
                     intolerances,
                 });
                 Alert.alert("Profile setup complete");
-                router.push("/(tabs)");
+                router.push("/(tabs)/profile");
             } catch (error) {
                 Alert.alert("Error setting up profile");
             }
@@ -83,6 +84,34 @@ export default function EditProfile() {
         }
 
     }
+    useEffect(() => {
+        const fetchUserData = async () => {
+          const user = auth.currentUser;
+          if (user) {
+            try {
+              const userRef = ref(db, `users/${user.uid}`);
+              const snapshot = await get(userRef);
+    
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+    
+                setUsername(data.username || "");
+                setFavCuisines(data.favCuisines || []);
+                setMyDiet(data.myDiet || []);
+                setFavDishes(data.favDishes || []);
+                setIntolerances(data.intolerances || []);
+              } else {
+                Alert.alert("User needs to set up their profile.");
+              }
+            } catch (error) {
+              Alert.alert("Error fetching user data");
+            }
+          } else {
+            Alert.alert("No user signed in");
+          }
+        }
+        fetchUserData();
+      }, []);
     return (
         <ScrollView>
             <View style={styles.container}>

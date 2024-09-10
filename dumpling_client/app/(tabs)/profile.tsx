@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Image, Platform, View, Text } from 'react-native';
+import { Alert, Image, Platform, View, Text, TouchableOpacity } from 'react-native';
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -9,6 +9,7 @@ import styles from "../../styles/styles";
 import { Link, useRouter } from 'expo-router';
 import { auth, db } from "../../scripts/firebaseConfig.mjs";
 import { ref, get } from "firebase/database";
+import { signOut } from 'firebase/auth';
 
 const profImg = require("../../assets/images/profileimg.png");
 
@@ -20,6 +21,17 @@ export default function ProfileScreen() {
   const [favDishes, setFavDishes] = useState<string[]>([]);
   const [intolerances, setIntolerances] = useState<string[]>([]);
   const router = useRouter();
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        Alert.alert("Logout successful");
+        router.push("/login");
+      })
+      .catch((error) => {
+        Alert.alert("Error logging out. Please try again.");
+      })
+  }
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -66,7 +78,7 @@ export default function ProfileScreen() {
         <Image source={profImg} />
       </View >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText style={styles.header}>Welcome, {username} </ThemedText>
+        <ThemedText style={styles.header}>Hey, {username} </ThemedText>
       </ThemedView>
       <View><Text style={styles.blacktext}>Let's have a look at your profile!</Text></View>
 
@@ -113,9 +125,11 @@ export default function ProfileScreen() {
         )}
       </View>
       <View style={styles.view} >
-      <Link href="../../forms/editprofile"><Text style={styles.colorfont}>Edit profile</Text></Link>
-      <Text style={styles.colorfont}>Logout</Text>
-      </View>   
+        <Link href="../../forms/editprofile"><Text style={styles.colorfont}>Edit profile</Text></Link>
+        <TouchableOpacity onPress={handleLogout}>
+          <Text style={styles.colorfont}>Logout</Text>
+        </TouchableOpacity>
+      </View>
     </ParallaxScrollView>
   );
 }
