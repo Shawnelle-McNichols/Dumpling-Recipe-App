@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center"
     },
+ 
     view: {
         padding:10
     },
@@ -43,6 +44,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 8,
     },
+    btn_recipe_sm: {
+      margin: 10,
+      backgroundColor: "#F59D56",
+      width: 30,
+      height: 30,
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 8,
+  },
     btn_sec: {
         margin: 10,
         backgroundColor: "rgba(245, 157, 86, 0.2)",
@@ -124,17 +134,33 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     reactLogo: {
-        height: 70,
-        width: 70,
-        top: 0,
-        left: '43%',
+        height: 50,
+        width: 50,
+        top: 35,
+        left: '15%',
         position: 'absolute',
     },
+    reactButton: {
+      margin: 10,
+      backgroundColor: "#F59D56",
+      width: 30,
+      height: 30,
+      left: '85%',
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 8,
+      position: 'absolute',
+  },
     divider: {
         height: 1,
         backgroundColor: '#d3d3d3',
-        marginVertical: 70,
+        marginVertical: 28,
     },
+    divider2: {
+      height: 1,
+      backgroundColor: '#d3d3d3',
+      marginVertical:15,
+  },
     //Choices
     grid:{
         flexDirection: "row",
