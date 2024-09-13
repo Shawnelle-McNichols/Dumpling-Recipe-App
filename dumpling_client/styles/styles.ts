@@ -38,11 +38,12 @@ const styles = StyleSheet.create({
     btn_main_sm: {
         margin: 10,
         backgroundColor: "#F59D56",
-        width: 100,
-        height: 30,
+        width: 60,
+        height: 55,
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 8,
+        top:16,
     },
     btn_recipe_sm: {
       margin: 10,
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
         height: 50,
         width: 50,
         top: 35,
-        left: '15%',
+        left: '45%',
         position: 'absolute',
     },
     reactButton: {

@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform, View, Text, FlatList, Alert } from 'react-native';
+import { StyleSheet, Image, Platform, View, Text, FlatList, Alert, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -89,19 +89,23 @@ export default function grocery() {
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#ffffff', dark: '#353636' }}
       headerImage={
-        <View>
+        <View style={styles.container}>
+           <ThemedView style={styles.divider} />
           <Image
             source={require('@/assets/images/react-logo.png')}
             style={styles.reactLogo}
           />
-          <ThemedView style={styles.divider}/>
+           {/* <TouchableOpacity style={styles.reactButton} >
+            <Text style={styles.whitefont}>+</Text>
+          </TouchableOpacity> */}
+          <ThemedView style={styles.divider2} />
         </View>
       }>
 
        {/* Thisis the start of edit area */}
         {/* Title */}
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title" style={styles.header} >Grocery List</ThemedText>
+        <ThemedText style={styles.header} >Grocery List</ThemedText>
       </ThemedView>
 
       {/* Adding the GroceryList component to display the list */}

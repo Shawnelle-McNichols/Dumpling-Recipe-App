@@ -9,12 +9,7 @@ import { LightSpeedOutLeft } from 'react-native-reanimated';
 type Recipe = {
   id: number,
   title: string,
-  summary: string,
   image: string,
-  servings: number,
-  readyInMinutes: number,
-  extendedIngredients: { name: string; original: string ;image:string}[],
-  analyzedInstructions: { number: number; step: string }[]
 }
 type props = {
   recipe: Recipe,
@@ -31,8 +26,6 @@ export default function RecipeCard({ recipe }: props) {
             <Image style={style.image} source={{uri:recipe.image}} />
             <View style={styles.view}>
                 <Text style={styles.subtitle}>{recipe.title}</Text>
-                <Text style={styles.blacktext}>Serving: {recipe.servings}</Text>
-                <Text style={styles.blacktext}>Cooking Time: {recipe.readyInMinutes} minutes</Text>
                 {/* <Text style={style.text}>Igredients: {Object.values(recipe.extendedIngredients).join(",")} minutes</Text> */}
             </View>
         </View>
