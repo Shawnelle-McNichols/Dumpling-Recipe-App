@@ -73,17 +73,15 @@ export default function PantryScreen() {
             source={require('@/assets/images/react-logo.png')}
             style={styles.reactLogo}
           />
-           <TouchableOpacity style={styles.reactButton} >
+           {/* <TouchableOpacity style={styles.reactButton} >
             <Text style={styles.whitefont}>+</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <ThemedView style={styles.divider2} />
           
         </View>
         }>
         <View >
-          <ThemedView style={styles.titleContainer}>
-            <ThemedText style={styles.header}>Pantry</ThemedText>
-          </ThemedView>
+          
           <ThemedView style={styles.view}>
             <ThemedText style={styles.subtitle}>Pantry Items</ThemedText>
             <FlatList

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, Image, Platform, View, Text, TouchableOpacity } from 'react-native';
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -72,9 +70,9 @@ export default function ProfileScreen() {
           source={require('@/assets/images/react-logo.png')}
           style={styles.reactLogo}
         />
-         <TouchableOpacity style={styles.reactButton} >
+         {/* <TouchableOpacity style={styles.reactButton} >
           <Text style={styles.whitefont}>+</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <ThemedView style={styles.divider2} />
         
       </View>

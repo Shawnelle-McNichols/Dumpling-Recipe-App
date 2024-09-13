@@ -11,20 +11,14 @@ import { ref, get } from "firebase/database";
 import RecipeCard from '@/components/RecipeCard';
 import axios from 'axios';
 
-//insert later
-const profImg = require("../../assets/images/profileimg.png");
+
 
 // Basically a class for Recipe
 
 type Recipe = {
-  id: number,
-  title: string,
-  summary: string,
-  image: string,
-  servings: number,
-  readyInMinutes: number,
-  extendedIngredients: { name: string; original: string ;image:string}[],
-  analyzedInstructions: { number: number; step: string }[]
+  id: number;
+  title: string;
+  image: string;
 }
 
 export default function HomeScreen() {
@@ -39,9 +33,9 @@ export default function HomeScreen() {
 
   const router = useRouter();
   //passes the selected recipe information to RecipeDetails
-  const handlePress = (recipe: Recipe) => {
-    const data = encodeURIComponent(JSON.stringify(recipe));
-    router.push(`../../components/RecipeDetails?recipe=${data}`);
+  const handlePress = (recipeId: number) => {
+    const data = encodeURIComponent(JSON.stringify(recipeId));
+    router.push(`../RecipeDetails?recipeId=${data}`);
     // router.push(`../../components/RecipeDetails?recipe=${data}`);
   }
 
@@ -76,26 +70,22 @@ export default function HomeScreen() {
 
     const fetchRandomRecipes = async () => {
       try {
-      //   /* ----------- use the spoonacular Apis ----------------*/
-      //   const response = await axios.get('https://api.spoonacular.com/recipes/random', {
-      //     params: {
-      //       apiKey: 'e8099cbd3a264bd288bfa39b349bd79a',
-      //       number:4
-      //     }
-      //   });
+        /* ----------- use the spoonacular Apis ----------------*/
+        const response = await axios.get('https://api.spoonacular.com/recipes/random', {
+          params: {
+            apiKey: "cc65630bf2074ce5adbafef9be645fcf",
+            number:4
+          }
+        });
         
-      //   const allRecipes: Recipe[]=response.data.map((item: any) => ({
-      //   id: item.id,
-      //   title: item.title,
-      //   image: item.image,
-      //   servings: item.servings,
-      //   readyInMinutes: item.readyInMinutes,
-      //   extendedIngredients: item.extendedIngredients.map((i: { name: string }) => i.name)
-      //   }));
+        const allRecipes: Recipe[]=response.data.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          image: item.image,
+        }));
 
-       
-      
-      //  setRecipes(allRecipes);
+
+      setRecipes(allRecipes);
       } catch (error) {
         setError('Error fetching recipes here');
       }
@@ -108,45 +98,18 @@ export default function HomeScreen() {
         /* ----------- use the spoonacular Apis ----------------*/
         const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch', {
           params: {
-            apiKey: 'e8099cbd3a264bd288bfa39b349bd79a', // 0c5808d00bf7421f92a78a69d6e86016
+            apiKey: "53b84dc3adc445898ab9b81020960a4a",
             intolerances:thisIntolerances,
             diet:thisDiet,
-            number:4
+            number:1
           }
         });
-
-        const allRecipes: Recipe[] = [];
-        for (let index = 0; index < response.data.results.length; index++) {
-          const id = response.data.results[index].id;
-          const response2 = await axios.get(`https://api.spoonacular.com/recipes/${id}/information`, {
-            params: {
-              apiKey: '53b84dc3adc445898ab9b81020960a4a'// 0c5808d00bf7421f92a78a69d6e86016
-            }
-          });
-          console.log(response2.data);
-         
-          const thisRecipe:Recipe= {
-            id: response2.data.id,
-            title: response2.data.title,
-            image: response2.data.image,
-            servings: response2.data.servings,
-            readyInMinutes: response2.data.readyInMinutes,
-            summary: response2.data.summary,
-            extendedIngredients: response2.data.extendedIngredients.map((ingredient: any) => ({
-                name: ingredient.name,
-                original: ingredient.original,
-                image: ingredient.image
-            })),
-            analyzedInstructions: response2.data.analyzedInstructions.map((instruction: any) => ({
-                number: instruction.number,
-                step: instruction.step
-            }))
-        }
-          allRecipes.push(thisRecipe);
-         
-        }
-     
-       setRecipes(allRecipes);
+        const allRecipes: Recipe[] = response.data.results.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          image: item.image,
+        }));
+        setRecipes(allRecipes);
 
        
       } catch (error) {
@@ -173,16 +136,16 @@ export default function HomeScreen() {
             source={require('@/assets/images/react-logo.png')}
             style={styles.reactLogo}
           />
-           <TouchableOpacity style={styles.reactButton} >
+           {/* <TouchableOpacity style={styles.reactButton} >
             <Text style={styles.whitefont}>+</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <ThemedView style={styles.divider2} />
           
         </View>
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText style={styles.header}>Welcome, {username}</ThemedText>
+        <ThemedText  type="title" style={styles.header}>Welcome, {username}</ThemedText>
       </ThemedView>
       <ThemedText style={styles.blacktext}>Here are a few recipe suggestions to get you started.</ThemedText>
       <View style={styles.container2}>
@@ -190,7 +153,7 @@ export default function HomeScreen() {
         data={recipes}
         keyExtractor={(item) => item.title}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handlePress(item)} >
+          <TouchableOpacity onPress={() => handlePress(item.id)} >
             <RecipeCard recipe={item} />
           </TouchableOpacity>
         )}
